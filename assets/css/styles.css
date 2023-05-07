@@ -1,167 +1,185 @@
-
-
-*, ::after, ::before {
-  box-sizing: border-box;
+*,
+::after,
+::before {
+	box-sizing: border-box;
 }
 
-@font-face{
+@font-face {
 	src: url(../fonts/OpenSans-Regular.ttf);
 	font-family: opensans;
 }
 
-@font-face{
+@font-face {
 	src: url(../fonts/DancingScript-VariableFont_wght.ttf);
 	font-family: dancingscript;
 }
 
-@font-face{
+@font-face {
 	src: url(../fonts/AmaticSC-Regular.ttf);
 	font-family: amatic;
 }
 
-@font-face{
+@font-face {
 	src: url(../fonts/SpecialElite-Regular.ttf);
 	font-family: specialelite;
 }
 
-@font-face{
+@font-face {
 	src: url(../fonts/Yellowtail-Regular.ttf);
 	font-family: yellowtail;
 }
 
-body{
+body {
 
 	font-family: opensans;
 	font-size: 16px;
-	margin:0px;
-	padding:0px;
+	margin: 0px;
+	padding: 0px;
 	word-break: break-word;
 	word-wrap: break-word;
 }
 
-		
-  
-  .item_class_0 > :not(caption) > * > * {
-    padding: .5rem .5rem;
-    border-bottom-width: 1px;
-  }
 
-  table {
-    caption-side: bottom;
-    border-collapse: collapse;
-  }
-  tbody, td, tfoot, th, thead, tr {
-    border-color: #e2e5e9;
-    border-style: solid;
-    border-width: 1px;
-  }
 
-.item_class_0 thead{
-  background-color: #f9f9f9;
+.item_class_0> :not(caption)>*>* {
+	padding: .5rem .5rem;
+	border-bottom-width: 1px;
+}
+
+table {
+	caption-side: bottom;
+	border-collapse: collapse;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+	border-color: #e2e5e9;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.item_class_0 thead {
+	background-color: #f9f9f9;
 }
 
 .item_class_0 {
-  background-color: #fff;
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  vertical-align: top;
+	background-color: #fff;
+	width: 100%;
+	margin-bottom: 1rem;
+	color: #212529;
+	vertical-align: top;
 }
 
 
-  
-  .item_class_1 > :not(caption) > * > * {
-    padding: .5rem .5rem;
-    border-bottom-width: 1px;
-  }
 
-  table {
-    caption-side: bottom;
-    border-collapse: collapse;
-  }
-  tbody, td, tfoot, th, thead, tr {
-    border-color: #e2e5e9;
-    border-style: solid;
-    border-width: 1px;
-  }
+.item_class_1> :not(caption)>*>* {
+	padding: .5rem .5rem;
+	border-bottom-width: 1px;
+}
 
-.item_class_1 thead{
-  background-color: #f9f9f9;
+table {
+	caption-side: bottom;
+	border-collapse: collapse;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+	border-color: #e2e5e9;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.item_class_1 thead {
+	background-color: #f9f9f9;
 }
 
 .item_class_1 {
-  background-color: #fff;
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  vertical-align: top;
+	background-color: #fff;
+	width: 100%;
+	margin-bottom: 1rem;
+	color: #212529;
+	vertical-align: top;
 }
 
 
-  
-  .item_class_2 > :not(caption) > * > * {
-    padding: .5rem .5rem;
-    border-bottom-width: 1px;
-  }
 
-  table {
-    caption-side: bottom;
-    border-collapse: collapse;
-  }
-  tbody, td, tfoot, th, thead, tr {
-    border-color: #e2e5e9;
-    border-style: solid;
-    border-width: 1px;
-  }
+.item_class_2> :not(caption)>*>* {
+	padding: .5rem .5rem;
+	border-bottom-width: 1px;
+}
 
-.item_class_2 thead{
-  background-color: #f9f9f9;
+table {
+	caption-side: bottom;
+	border-collapse: collapse;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+	border-color: #e2e5e9;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.item_class_2 thead {
+	background-color: #f9f9f9;
 }
 
 .item_class_2 {
-  background-color: #fff;
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  vertical-align: top;
+	background-color: #fff;
+	width: 100%;
+	margin-bottom: 1rem;
+	color: #212529;
+	vertical-align: top;
 }
 
 
-.class_1{
+.class_1 {
 
 	display: flex;
-	flex-wrap:wrap;
-	
+	flex-wrap: wrap;
+
 }
 
-.class_2{
+.class_2 {
 
 	flex: 1 1 0%;
 	background-color: rgb(242, 242, 242);
 	vertical-align: top;
 	max-width: 100px;
-	
+
 }
 
-.class_3{
+.class_3 {
 
 	width: 100%;
 	height: 60px;
 	object-fit: cover;
-	
+
 }
 
-.class_4{
+.class_4 {
 
 	flex: 1 1 0%;
 	min-width: 300px;
 	min-height: 50px;
 	background-color: rgb(250, 250, 250);
 	vertical-align: top;
-	
+
 }
 
-.class_5{
+.class_5 {
 
 	padding-left: 10px;
 	padding-right: 10px;
@@ -169,17 +187,17 @@ body{
 	font-family: amatic;
 	letter-spacing: 10px;
 	display: flex;
-	
+
 }
 
-.class_6{
+.class_6 {
 
 	font-size: 30px;
 	color: rgb(81, 81, 81);
-	
+
 }
 
-.class_7{
+.class_7 {
 
 	flex: 1 1 0%;
 	vertical-align: top;
@@ -190,34 +208,34 @@ body{
 	padding-left: 5px;
 	padding-right: 5px;
 	background-color: rgb(255, 255, 255);
-	
+
 }
 
-.class_8{
+.class_8 {
 
 	border-radius: 50%;
 	width: 40px;
 	height: 40px;
 	object-fit: cover;
-	
+
 }
 
-.class_9{
+.class_9 {
 
 	padding: 5px;
-	
+
 }
 
-.class_10{
+.class_10 {
 
 	display: flex;
 	flex-wrap: wrap;
 	background-color: rgb(255, 255, 255);
 	min-height: 100vh;
-	
+
 }
 
-.class_11{
+.class_11 {
 
 	flex: 1 1 0%;
 	min-height: 400px;
@@ -229,23 +247,23 @@ body{
 	top: 0px;
 	position: relative;
 	height: 1px;
-	
+
 }
 
-.class_12{
+.class_12 {
 
-	font-size:16px;
+	font-size: 16px;
 	padding: 10px;
-	border:none;
-	color:#FFFFFF;
-	background-color:#0d6efd;
-	border-radius:6px;
+	border: none;
+	color: #FFFFFF;
+	background-color: #0d6efd;
+	border-radius: 6px;
 	margin: .25rem .125rem;
 	cursor: pointer;
-	
+
 }
 
-.class_13{
+.class_13 {
 
 	height: 100px;
 	padding: 10px;
@@ -255,27 +273,27 @@ body{
 	position: absolute;
 	width: 94%;
 	bottom: 10px;
-	
+
 }
 
-.class_14{
+.class_14 {
 
 	height: 15px;
 	background-color: rgb(191, 191, 191);
 	color: rgb(255, 255, 255);
-	
+
 }
 
-.class_15{
+.class_15 {
 
 	width: 50%;
 	height: 100%;
 	background-color: rgb(116, 46, 206);
 	color: rgb(255, 255, 255);
-	
+
 }
 
-.class_16{
+.class_16 {
 
 	height: 50px;
 	padding: 10px;
@@ -286,16 +304,16 @@ body{
 	align-items: center;
 	cursor: pointer;
 	border-bottom: 1px solid rgb(206, 212, 218);
-	
+
 }
 
-.class_17{
+.class_17 {
 
 	font-size: 30px;
-	
+
 }
 
-.class_18{
+.class_18 {
 
 	height: 50px;
 	padding: 10px;
@@ -306,48 +324,48 @@ body{
 	align-items: center;
 	cursor: pointer;
 	border-bottom: 1px solid rgb(206, 212, 218);
-	
+
 }
 
-.class_19{
+.class_19 {
 
 	font-size: 30px;
-	
+
 }
 
-.class_20{
+.class_20 {
 
 	font-size: 30px;
-	
+
 }
 
-.class_21{
+.class_21 {
 
 	font-size: 30px;
-	
+
 }
 
-.class_22{
+.class_22 {
 
 	flex: 2 1 0%;
 	min-width: 300px;
 	min-height: 200px;
 	background-color: rgb(244, 244, 244);
 	vertical-align: top;
-	
+
 }
 
-.class_23{
+.class_23 {
 
 	height: 39px;
 	color: rgb(255, 255, 255);
 	display: flex;
 	padding: 5px;
 	border-radius: 20px;
-	
+
 }
 
-.class_24{
+.class_24 {
 
 	background-color: rgb(125, 125, 125);
 	height: 100%;
@@ -360,10 +378,10 @@ body{
 	display: flex;
 	margin-left: 1px;
 	margin-right: 1px;
-	
+
 }
 
-.class_25{
+.class_25 {
 
 	background-color: rgb(125, 125, 125);
 	height: 100%;
@@ -376,10 +394,10 @@ body{
 	display: flex;
 	margin-left: 1px;
 	margin-right: 1px;
-	
+
 }
 
-.class_26{
+.class_26 {
 
 	background-color: rgb(219, 219, 219);
 	height: 100%;
@@ -393,120 +411,120 @@ body{
 	color: rgb(0, 0, 0);
 	margin-left: 1px;
 	margin-right: 1px;
-	
+
 }
 
-.class_27{
+.class_27 {
 
 	padding-left: 10px;
 	padding-right: 10px;
 	margin: 10px 0px;
 	font-size: 20px;
-	
+
 }
 
-.class_28{
+.class_28 {
 
 	overflow-x: auto;
 	min-width: 350px;
-	
+
 }
 
-.class_29{
+.class_29 {
 
 	cursor: pointer;
-	
+
 }
 
-.class_30{
+.class_30 {
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	
+
 }
 
-.class_31{
+.class_31 {
 
 	font-size: 30px;
 	color: rgb(24, 18, 255);
-	
+
 }
 
-.class_32{
+.class_32 {
 
 	left: -1px;
-	
+
 }
 
-.class_33{
+.class_33 {
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 58px;
-	
+
 }
 
-.class_34{
+.class_34 {
 
 	font-size: 30px;
 	margin-left: 5px;
 	margin-right: 5px;
 	color: rgb(63, 71, 204);
-	
+
 }
 
-.class_35{
+.class_35 {
 
 	font-size: 30px;
 	margin: 10px 5px;
 	color: rgb(163, 73, 164);
-	
+
 }
 
-.class_36{
+.class_36 {
 
 	font-size: 30px;
 	margin: 10px 5px;
-	
+
 }
 
-.class_37{
+.class_37 {
 
 	font-size: 30px;
 	margin: 10px 5px;
 	color: rgb(236, 28, 35);
-	
+
 }
 
-.class_38{
+.class_38 {
 
 	background-color: rgb(237, 237, 237);
-	
+
 }
 
-.class_39{
+.class_39 {
 
 	font-size: 30px;
 	color: rgb(255, 21, 226);
-	
+
 }
 
-.class_40{
+.class_40 {
 
 	font-size: 30px;
 	color: rgb(0, 0, 0);
-	
+
 }
 
-.class_41{
+.class_41 {
 
 	padding: 4px;
-	
+
 }
 
-.class_42{
+.class_42 {
 
 	cursor: pointer;
 	font-size: 16px;
@@ -516,10 +534,10 @@ body{
 	background-color: rgb(132, 30, 183);
 	border-radius: 6px;
 	margin: 0.25rem 0.125rem;
-	
+
 }
 
-.class_43{
+.class_43 {
 
 	cursor: pointer;
 	font-size: 16px;
@@ -530,25 +548,25 @@ body{
 	border-radius: 6px;
 	margin: 0.25rem 0.125rem;
 	float: right;
-	
+
 }
 
-.class_44{
+.class_44 {
 
 	clear: both;
-	
+
 }
 
-.class_45{
+.class_45 {
 
 	width: 229px;
-	 background-color: rgb(74, 114, 137);
+	background-color: rgb(74, 114, 137);
 	color: rgb(0, 0, 0);
-	 border: 1px solid rgb(164, 169, 173);
-	
+	border: 1px solid rgb(164, 169, 173);
+
 }
 
-.class_46{
+.class_46 {
 
 	height: 50px;
 	padding: 10px;
@@ -559,46 +577,46 @@ body{
 	align-items: center;
 	cursor: pointer;
 	border-bottom: 1px solid rgb(206, 212, 218);
-	
+
 }
 
-.class_46:hover{
+.class_46:hover {
 	background-color: rgb(125, 125, 125);
 	color: white;
 }
 
-.class_47{
+.class_47 {
 
 	flex: 1 1 0%;
 	min-height: 200px;
 	vertical-align: top;
 	max-width: 300px;
 	background-color: rgb(255, 255, 255);
-	
+
 }
 
-.class_48{
+.class_48 {
 
 	padding-left: 10px;
 	padding-right: 10px;
 	margin: 10px 0px;
 	font-size: 16px;
-	
+
 }
 
-.class_49{
+.class_49 {
 
 	overflow-x: auto;
-	
+
 }
 
-.class_50{
+.class_50 {
 
 	width: 95%;
-	
+
 }
 
-.class_51{
+.class_51 {
 
 	padding: 10px;
 	background-color: rgb(255, 192, 192);
@@ -606,8 +624,28 @@ body{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	
+
 }
-.hide{
+
+.hide {
 	display: none;
+}
+
+.drop-zone:hover{
+	background-color: #ccc;
+}
+
+.drop-zone {
+	height: 200px;
+	border: dotted 4px #444;
+	border-radius: 10px;
+	background-color: #eee;
+	margin: 10px;
+	padding: 10px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	cursor: pointer;
 }
