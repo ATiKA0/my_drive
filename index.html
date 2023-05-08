@@ -100,35 +100,34 @@
 					<thead>
 
 						<tr>
-
 							<th scope="col">
 								#
 							</th>
 
 							<th scope="col">
 								File Name
-								<br>
 							</th>
-
 							<th scope="col">
-								Last Modified
-								<br>
+								Type
 							</th>
-
+							<th scope="col">
+								Created
+							</th>
+							<th scope="col">
+								Updated
+							</th>
 							<th scope="col">
 								Size
 							</th>
-
 							<th scope="col">
 								Action
 							</th>
-
 						</tr>
 
 					</thead>
 
 					<tbody id="table-body" onclick="table.select(event)">
-
+						<!--
 						<tr style="">
 
 							<th class="class_30">
@@ -217,6 +216,7 @@
 							</td>
 
 						</tr>
+					-->
 					</tbody>
 				</table>
 			</div>
@@ -242,7 +242,7 @@
 				<table class="item_class_2 class_50">
 
 					<tbody>
-
+						
 						<tr>
 
 							<th>
@@ -297,7 +297,8 @@
 					No file was selected
 				</div>
 			</div>
-			<label ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()" class="drop-zone">
+			<label ondrop="upload.drop(event)" ondragover="upload.dragOver(event)"
+				ondragleave="upload.dropZone.removeHighlight()" class="drop-zone">
 				<i class="bi bi-cloud-arrow-up-fill class_6"></i>
 				Drag and drop files here or click to upload
 				<input onchange="upload.send(this.files)" type="file" class="hide" multiple>
@@ -422,6 +423,54 @@
 			if (item.tagName == 'TR')
 				table.selected = item;
 			table.selected.classList.add('class_38');
+		},
+
+		refresh: (data)=>{
+
+			let myForm = new FormData();
+
+			myForm.append('data_type','get_files');
+
+			let xhr = new XMLHttpRequest();
+
+			xhr.addEventListener('readystatechange', () => {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+
+						let tbody = document.querySelector('#table-body');
+						tbody.innerHTML = "";
+
+						let obj = JSON.parse(xhr.responseText);
+
+						if(obj.succes && obj.data_type == "get_files"){
+
+							for (let i = 0; i < obj.rows.length; i++) {
+
+								let tr = document.createElement('tr');
+								tr.innerHTML = `
+									<td>icon</td>
+									<td>${obj.rows[i].file_name}</td>
+									<td>${obj.rows[i].file_type}</td>
+									<td>${obj.rows[i].date_created}</td>
+									<td>${obj.rows[i].date_updated}</td>
+									<td>${obj.rows[i].file_size}</td>
+									<td></td>
+								`;
+								tbody.appendChild(tr);
+							}
+
+						} else {
+							tbody.innerHTML = "<tr><td colspan = '10' style ='text-align:center'>No files found!</td></tr>";
+						}
+					}else
+						console.log(xhr.responseText);
+				}
+			});
+
+			xhr.open('post', 'api.php', true);
+			xhr.send(myForm);
+			//recreate table
+			
 		}
 	};
 
@@ -429,18 +478,18 @@
 		cancelled: false,
 		uploading: false,
 
-		cancel: ()=>{
+		cancel: () => {
 			upload.cancelled = true;
 		},
 
-		resetProgress: ()=>{
+		resetProgress: () => {
 			document.querySelector(".js-prog").style.width = "0%";
 			document.querySelector(".js-prog-text").innerHTML = "0%";
 			document.querySelector(".js-prog-holder").classList.add("hide");
 		},
 
 		send: (files) => {
-			if(upload.uploading){
+			if (upload.uploading) {
 				alert("Please wait for the previous upload to finish!");
 				return;
 			}
@@ -448,8 +497,10 @@
 			upload.cancelled = false;
 			let myForm = new FormData();
 
+			myForm.append('data_type','upload_files');
+
 			for (let i = 0; i < files.length; i++) {
-				myForm.append('file'+i, files[i]);
+				myForm.append('file' + i, files[i]);
 			}
 
 			upload.resetProgress();
@@ -466,7 +517,7 @@
 				document.querySelector(".js-prog").style.width = percent + "%";
 				document.querySelector(".js-prog-text").innerHTML = percent + "%";
 
-				if(upload.cancelled){
+				if (upload.cancelled) {
 					xhr.abort();
 					alert("Your upload is canceled!");
 					upload.resetProgress();
@@ -477,7 +528,13 @@
 				if (xhr.readyState == 4) {
 					if (xhr.status == 200) {
 						upload.resetProgress();
-						console.log(xhr.responseText);
+						let obj = JSON.parse(xhr.responseText);
+						if(obj.succes){
+							alert("Upload complete!");
+						}else{
+							alert("Could not complete file upload!");
+						}
+						upload.resetProgress();
 					} else {
 						console.log(xhr.responseText);
 						alert("An error occured! Please try again later!");
@@ -490,27 +547,28 @@
 			xhr.send(myForm);
 		},
 
-		drop: (e)=>{
+		drop: (e) => {
 			e.preventDefault();
 			upload.dropZone.removeHighlight();
 			console.log(e.dataTransfer.files);
 			upload.send(e.dataTransfer.files);
 		},
 
-		dragOver: (e)=>{
+		dragOver: (e) => {
 			e.preventDefault();
 			upload.dropZone.highlight();
 		},
 
 		dropZone: {
-			highlight: ()=>{
+			highlight: () => {
 				document.querySelector('.drop-zone').classList.add('drop-zone-highlight');
 			},
-			removeHighlight: ()=>{
+			removeHighlight: () => {
 				document.querySelector('.drop-zone').classList.remove('drop-zone-highlight');
 			}
 		}
 	};
 
+	table.refresh('');
 	window.addEventListener('click', submenu.hide);
 </script>
