@@ -31,7 +31,7 @@
 	</div>
 	<div class="class_10">
 		<div class="class_11">
-			<button onclick="IO.send()" class="class_12">
+			<button onclick="upload.send()" class="class_12">
 				+New Folder
 			</button>
 			<div class="class_13">
@@ -297,10 +297,10 @@
 					No file was selected
 				</div>
 			</div>
-			<label class="drop-zone">
+			<label ondrop="upload.drop(event)" ondragover="upload.dragOver(event)" ondragleave="upload.dropZone.removeHighlight()" class="drop-zone">
 				<i class="bi bi-cloud-arrow-up-fill class_6"></i>
 				Drag and drop files here or click to upload
-				<input onchange="IO.send(this.files[0])" type="file" class="hide">
+				<input onchange="upload.send(this.files)" type="file" class="hide" multiple>
 				<div class="js-prog-holder hide class_13"
 					style="position: static; height: auto; background-color: transparent;">
 					<div class="class_14">
@@ -310,6 +310,9 @@
 					<div class="js-prog-text class_9">
 						50%
 					</div>
+					<button onclick="upload.cancel()" class="class_42">
+						Abort
+					</button>
 				</div>
 			</label>
 		</div>
@@ -422,14 +425,34 @@
 		}
 	};
 
-	const IO = {
-		send: (file) => {
+	const upload = {
+		cancelled: false,
+		uploading: false,
 
-			let myForm = new FormData();
-			myForm.append('file', file);
+		cancel: ()=>{
+			upload.cancelled = true;
+		},
 
+		resetProgress: ()=>{
 			document.querySelector(".js-prog").style.width = "0%";
 			document.querySelector(".js-prog-text").innerHTML = "0%";
+			document.querySelector(".js-prog-holder").classList.add("hide");
+		},
+
+		send: (files) => {
+			if(upload.uploading){
+				alert("Please wait for the previous upload to finish!");
+				return;
+			}
+			upload.uploading = true;
+			upload.cancelled = false;
+			let myForm = new FormData();
+
+			for (let i = 0; i < files.length; i++) {
+				myForm.append('file'+i, files[i]);
+			}
+
+			upload.resetProgress();
 			document.querySelector(".js-prog-holder").classList.remove("hide");
 
 			let xhr = new XMLHttpRequest();
@@ -442,21 +465,50 @@
 				let percent = Math.round((e.loaded / e.total) * 100);
 				document.querySelector(".js-prog").style.width = percent + "%";
 				document.querySelector(".js-prog-text").innerHTML = percent + "%";
+
+				if(upload.cancelled){
+					xhr.abort();
+					alert("Your upload is canceled!");
+					upload.resetProgress();
+				}
 			});
 
 			xhr.addEventListener('readystatechange', () => {
 				if (xhr.readyState == 4) {
 					if (xhr.status == 200) {
+						upload.resetProgress();
 						console.log(xhr.responseText);
 					} else {
 						console.log(xhr.responseText);
 						alert("An error occured! Please try again later!");
 					}
+					upload.uploading = false;
 				}
 			});
 
 			xhr.open('post', 'api.php', true);
 			xhr.send(myForm);
+		},
+
+		drop: (e)=>{
+			e.preventDefault();
+			upload.dropZone.removeHighlight();
+			console.log(e.dataTransfer.files);
+			upload.send(e.dataTransfer.files);
+		},
+
+		dragOver: (e)=>{
+			e.preventDefault();
+			upload.dropZone.highlight();
+		},
+
+		dropZone: {
+			highlight: ()=>{
+				document.querySelector('.drop-zone').classList.add('drop-zone-highlight');
+			},
+			removeHighlight: ()=>{
+				document.querySelector('.drop-zone').classList.remove('drop-zone-highlight');
+			}
 		}
 	};
 

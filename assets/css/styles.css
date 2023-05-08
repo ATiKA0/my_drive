@@ -649,3 +649,7 @@ tr {
 	flex-direction: column;
 	cursor: pointer;
 }
+
+.drop-zone-highlight{
+	background-color: #ccc;
+}
