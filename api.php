@@ -3,11 +3,16 @@ session_start();
 require 'functions.php';
 
 $info = [];
+$info['data_type'] = $_POST['data_type'] ?? '';
 $info['succes'] = false;
+$info['LOGGED_IN'] = isLoggedIn();
+
+if (!$info['LOGGED_IN']) {
+    echo json_encode($info);
+    die;
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
-
-    $info['data_type'] = $_POST['data_type'];
 
     if ($_POST['data_type'] == 'upload_files') {
         $folder = 'uploads/';
@@ -66,15 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
         if ($rows) {
 
-            foreach($rows as $key => $row){
+            foreach ($rows as $key => $row) {
                 $rows[$key]['icon'] = $icons[$row['file_type']] ?? '<i class="bi bi-question-square-fill class_39"></i>';
                 $rows[$key]['date_created'] = get_date($row['date_created']);
                 $rows[$key]['date_updated'] = get_date($row['date_updated']);
                 $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . " Mb";
 
-                if($rows[$key]['file_size'] == '0 Mb'){
+                if ($rows[$key]['file_size'] == '0 Mb') {
                     $rows[$key]['file_size'] = round($row['file_size'] / 1024) . " Kb";
-
                 }
             }
             $info['rows'] = $rows;

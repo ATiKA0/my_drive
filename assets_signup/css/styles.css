@@ -159,3 +159,7 @@ body{
 	width: 150px;
 	
 }
+
+.hide{
+	display: none;
+}

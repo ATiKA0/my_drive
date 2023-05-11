@@ -108,7 +108,7 @@
 								File Name
 							</th>
 							<th scope="col">
-								
+
 							</th>
 							<th scope="col">
 								Type
@@ -366,7 +366,6 @@
 </html>
 
 <script>
-
 	let ROWS = [];
 	let LOGGED_IN = false;
 
@@ -425,14 +424,14 @@
 				item = item.parentNode;
 			}
 
-			if (item.tagName == 'TR'){
-				if(old_selected_id == null || item.getAttribute('id') !== old_selected_id){
+			if (item.tagName == 'TR') {
+				if (old_selected_id == null || item.getAttribute('id') !== old_selected_id) {
 					table.selected = item;
 					table.selected_id = item.getAttribute('id');
 					table.selected.classList.add('class_38');
 
-					fileInfo.show(item.getAttribute('id').replace("tr_",""));
-				}else{
+					fileInfo.show(item.getAttribute('id').replace("tr_", ""));
+				} else {
 					fileInfo.hide();
 				}
 			}
@@ -468,6 +467,10 @@
 						console.log(xhr.responseText);
 
 						let obj = JSON.parse(xhr.responseText);
+						//check user logged in
+						LOGGED_IN = obj.LOGGED_IN;
+						if (!LOGGED_IN)
+							window.location.href = 'login.html';
 
 						if (obj.succes && obj.data_type == "get_files") {
 
@@ -475,13 +478,13 @@
 							for (let i = 0; i < obj.rows.length; i++) {
 
 								let tr = document.createElement('tr');
-								tr.setAttribute('id', 'tr_'+i);
+								tr.setAttribute('id', 'tr_' + i);
 
 								// set favorite star
 								let star = '<i class="bi bi-star class_34">';
-								if(obj.rows[i].favorite == 1)
+								if (obj.rows[i].favorite == 1)
 									star = '<i class="bi bi-star-fill class_34">'
-	
+
 								tr.innerHTML = `
 									<td>${obj.rows[i].icon}</td>
 									<td style="max-width:200px">${obj.rows[i].file_name}</td>
@@ -609,7 +612,7 @@
 
 	let fileInfo = {
 
-		show: (id)=>{
+		show: (id) => {
 
 			let row = ROWS[id];
 			document.querySelector('.js-info-no-file').classList.add('hide');
@@ -622,7 +625,7 @@
 			fileInfoPanel.querySelector('#dateAdded').innerHTML = row.date_created;
 		},
 
-		hide: ()=>{
+		hide: () => {
 			document.querySelector('.js-info-no-file').classList.remove('hide');
 			document.querySelector('.js-file-info').classList.add('hide');
 		}

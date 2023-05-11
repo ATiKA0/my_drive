@@ -25,6 +25,16 @@ function query($query)
     return false;
 }
 
-function get_date($date){
+function get_date($date)
+{
     return date("jS M Y", strtotime($date));
+}
+
+function isLoggedIn()
+{
+
+    if (!empty($_SESSION['USER']) && is_array($_SESSION['USER']))
+        return true;
+
+    return false;
 }
