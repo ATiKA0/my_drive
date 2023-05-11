@@ -7,14 +7,15 @@ $info['data_type'] = $_POST['data_type'] ?? '';
 $info['succes'] = false;
 $info['LOGGED_IN'] = isLoggedIn();
 
-if (!$info['LOGGED_IN']) {
+if (!$info['LOGGED_IN'] && ($info['data_type'] != 'user_signup' && $info['data_type'] != 'user_login')) {
     echo json_encode($info);
     die;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
-    if ($_POST['data_type'] == 'upload_files') {
+    switch($_POST['data_type']){
+    case ('upload_files'):
         $folder = 'uploads/';
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
@@ -40,8 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             query($query);
             $info['succes'] = true;
         }
-    } else
-    if ($_POST['data_type'] == 'get_files') {
+        break;
+
+    case ('get_files'):
 
         $mode = $_POST['mode'];
 
@@ -84,7 +86,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             $info['rows'] = $rows;
             $info['succes'] = true;
         }
-    }
+        break;
+
+    case('user_signup'):
+
+        //save to database
+        $email = addslashes($_POST['email']);
+        $username = addslashes($_POST['username']);
+        $password = addslashes($_POST['password']);
+        $dateCreated = date('Y-m-d H:i:s');
+        $dateUpdated = date('Y-m-d H:i:s');
+        $retype_password = addslashes($_POST['retype-password']);
+
+
+        //validate
+        $errors = [];
+
+        if(!preg_match("/^[a-zA-z]+$/",$username))
+            $errors['username'] = "Invalid username. No symbols allowed.";
+
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+            $errors['email'] = "Invalid email address";
+
+        if(query("SELECT id FROM users WHERE email = '$email' LIMIT 1"))
+            $errors['email'] = "That email adress already exists";
+
+        if(empty($password))
+            $errors['password'] = "A password is required";
+
+        if(strlen($password) < 8)
+            $errors['password'] = "Password must be 8 charachters long";
+
+        if($password != $retype_password)
+            $errors['password'] = "Passwords do not match";
+
+        if(empty($errors)){
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $query = "INSERT INTO users (username, email, password, date_created, date_updated) 
+            values ('$username', '$email', '$password', '$dateCreated', '$dateUpdated')";
+            query($query);
+            $info['succes'] = true;
+        }
+
+        $info['errors'] = $errors;
+
+        break;
+}
+
 }
 
 echo json_encode($info);
