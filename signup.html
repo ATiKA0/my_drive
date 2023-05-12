@@ -28,28 +28,28 @@
 					<label class="class_8">
 						USERNAME
 					</label>
-					<input placeholder="Enter a Username" type="text" name="username" class="class_9">
+					<input placeholder="Enter a Username" type="text" name="username" class="class_9" required>
 				</div>
 				<small class="error error-username hide" style="color: red;display: block;"></small>
 				<div class="class_7">
 					<label class="class_8">
 						EMAIL
 					</label>
-					<input placeholder="Enter a valid Email" type="email" name="email" class="class_10">
+					<input placeholder="Enter a valid Email" type="email" name="email" class="class_10" required>
 				</div>
 				<small class="error error-email hide" style="color: red;display: block;"></small>
 				<div class="class_7">
 					<label class="class_8">
 						PASSWORD
 					</label>
-					<input placeholder="Enter a password" type="text" name="password" class="class_9">
+					<input placeholder="Enter a password" type="password" name="password" class="class_9" required>
 				</div>
 				<small class="error error-password hide" style="color: red;display: block;"></small>
 				<div class="class_7">
 					<label class="class_8">
 						RETYPE PASSWORD
 					</label>
-					<input placeholder="Retype password" type="text" name="retype-password" class="class_9">
+					<input placeholder="Retype password" type="password" name="retype-password" class="class_9" required>
 				</div>
 			</div>
 			<div style="padding: 10px;text-align: center ;">
@@ -104,21 +104,22 @@
 
 						if (obj.succes && obj.data_type == "user_signup") {
 							alert("Your account was created! Please login to continue!");
-							window.location.href = 'index.html';
+							window.location.href = 'login.html';
 
 						} else {
 							//errors
 							let form = document.querySelector("form");
-							
+
 							//clear old error
 							let errors = document.querySelectorAll(".error");
+							document.querySelector(".js-error-banner").classList.remove("hide");
 							errors.forEach(error => {
 								error.innerHTML = "";
 								error.classList.add("hide");
 							});
 							//show new errors
-							for(key in obj.errors){
-								let item = document.querySelector(".error-"+key);
+							for (key in obj.errors) {
+								let item = document.querySelector(".error-" + key);
 								item.innerHTML = obj.errors[key];
 								item.classList.remove("hide");
 							}

@@ -25,7 +25,7 @@
 		<div class="class_7">
 			<img src="assets/images/beautiful-sincere-happy-girl-smiling-laughing_176420-9693.jpg" class="class_8">
 			<div class="class_9">
-				Hi User
+				Hi <span class="username">User</span> <a href="#" onclick="table.logout()">[logout]</a>
 			</div>
 		</div>
 	</div>
@@ -368,6 +368,7 @@
 <script>
 	let ROWS = [];
 	let LOGGED_IN = false;
+	let USERNAME= false;
 
 	let mode = {
 		current: 'MY DRIVE',
@@ -467,6 +468,13 @@
 						console.log(xhr.responseText);
 
 						let obj = JSON.parse(xhr.responseText);
+						
+						//display username
+						if(!USERNAME){
+							USERNAME = obj.username;
+							document.querySelector('.username').innerHTML = obj.username;
+						}
+
 						//check user logged in
 						LOGGED_IN = obj.LOGGED_IN;
 						if (!LOGGED_IN)
@@ -502,6 +510,31 @@
 							tbody.innerHTML =
 								"<tr><td colspan = '10' style ='text-align:center'>No files found!</td></tr>";
 						}
+					} else
+						console.log(xhr.responseText);
+				}
+			});
+
+			xhr.open('post', 'api.php', true);
+			xhr.send(myForm);
+			//recreate table
+
+		},
+
+		logout: () => {
+
+			let myForm = new FormData();
+
+			myForm.append('data_type', 'user_logout');
+
+			let xhr = new XMLHttpRequest();
+
+			xhr.addEventListener('readystatechange', () => {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+
+						window.location.href = 'login.html';
+
 					} else
 						console.log(xhr.responseText);
 				}
