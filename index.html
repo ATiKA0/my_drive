@@ -39,10 +39,10 @@
 					Drive Space
 				</div>
 				<div class="class_14">
-					<div class="class_15">
+					<div class="js-drive-space-percent class_15">
 					</div>
 				</div>
-				<div class="class_9">
+				<div class="js-drive-space-text class_9">
 					8Gb / 10Gb
 				</div>
 			</div>
@@ -130,96 +130,7 @@
 					</thead>
 
 					<tbody id="table-body" onclick="table.select(event)">
-						<!--
-						<tr style="">
 
-							<th class="class_30">
-								<br>
-								<i class="bi bi-file-earmark-text class_31">
-								</i>
-							</th>
-
-							<td>
-								My File.txt
-								<br>
-							</td>
-
-							<td class="class_32">
-								12th Jan 2023
-								<br>
-							</td>
-
-							<td>
-								21.5Mb
-							</td>
-
-							<td class="class_33">
-								<br>
-								<i class="bi bi-cloud-download-fill class_34">
-								</i>
-							</td>
-
-						</tr>
-
-						<tr class="">
-
-							<th class="class_30">
-								<br>
-								<i class="bi bi-card-image class_39">
-								</i>
-							</th>
-
-							<td>
-								My Image.jpg
-								<br>
-							</td>
-
-							<td>
-								14th Jun 2023
-								<br>
-							</td>
-
-							<td>
-								30.8Mb
-							</td>
-
-							<td class="class_33">
-								<br>
-								<i class="bi bi-cloud-download-fill class_34">
-								</i>
-							</td>
-
-						</tr>
-
-						<tr style="">
-
-							<th class="class_30">
-								<br>
-								<i class="bi bi-folder class_40">
-								</i>
-							</th>
-
-							<td>
-								My Folder
-							</td>
-
-							<td class="class_32">
-								12th Jan 2023
-								<br>
-							</td>
-
-							<td>
-								-
-							</td>
-
-							<td class="class_33">
-								<br>
-								<i class="bi bi-cloud-download-fill class_34">
-								</i>
-							</td>
-
-						</tr>
-					-->
 					</tbody>
 				</table>
 			</div>
@@ -481,6 +392,14 @@
 							window.location.href = 'login.html';
 
 						if (obj.succes && obj.data_type == "get_files") {
+
+							//update drive space
+							let driveOccupied = (obj.drive_occupied / (1024*1024*1024)).toFixed(2);
+							let drivePercent = Math.round((driveOccupied / obj.drive_total) * 100);
+
+							document.querySelector(".js-drive-space-text").innerHTML = `${driveOccupied} GB / ${obj.drive_total} GB`;
+							document.querySelector(".js-drive-space-percent").style.width = `${drivePercent}%`;
+							console.log(driveOccupied)
 
 							ROWS = obj.rows;
 							for (let i = 0; i < obj.rows.length; i++) {

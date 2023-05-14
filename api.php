@@ -6,12 +6,15 @@ $info = [];
 $info['data_type'] = $_POST['data_type'] ?? '';
 $info['succes'] = false;
 $info['LOGGED_IN'] = isLoggedIn();
-$info['username'] = $_SESSION['USER']['username'] ?? 'User';
 
 if (!$info['LOGGED_IN'] && ($info['data_type'] != 'user_signup' && $info['data_type'] != 'user_login')) {
     echo json_encode($info);
     die;
 }
+
+$info['username'] = $_SESSION['USER']['username'] ?? 'User';
+$info['drive_occupied'] = getDriveSpace($_SESSION['USER']['id']);
+$info['drive_total'] = 10;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
@@ -35,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $fileName = $file['name'];
                 $filePath = $destination;
                 $user_id = $_SESSION['USER']['id'] ?? 0;
-                $fileSize = filesize($destination);
+                $fileSize = $file['size'];
 
                 $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated) 
             values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated')";
@@ -76,7 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             if ($rows) {
 
                 foreach ($rows as $key => $row) {
-                    $rows[$key]['icon'] = $icons[$row['file_type']] ?? '<i class="bi bi-question-square-fill class_39"></i>';
+                    $parts = explode(".", $row['file_name']);
+                    $ext = strtolower(end($parts));
+                    $rows[$key]['icon'] = getIcon($row['file_type'], $ext);
                     $rows[$key]['date_created'] = get_date($row['date_created']);
                     $rows[$key]['date_updated'] = get_date($row['date_updated']);
                     $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . " Mb";
