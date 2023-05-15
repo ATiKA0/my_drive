@@ -10,9 +10,12 @@ function getIcon($type, $ext = null){
         'image/jpeg' => '<i class="bi bi-card-image class_39"></i>',
         'image/png' => '<i class="bi bi-card-image class_39"></i>',
         'text/plain' => '<i class="bi bi-filetype-txt class_31"></i>',
+        'application/pdf' => '<i class="bi bi-filetype-pdf class_31"></i>',
         'application/vnd.openxmlformats-officedocument.word' => '<i class="bi bi-file-earmark-word class_31"></i>',
+        'application/x-zip-compressed' => '<i class="bi bi-file-zip class_40"></i>',
         'video/x-matroska' => '<i class="bi bi-film class_39"></i>',
         'video/mp4' => '<i class="bi bi-film class_39"></i>',
+        'folder' => '<i class="bi bi-folder class_39"></i>',
         'application/octet-stream' => [
             'heic' => '<i class="bi bi-filetype-heic class_39"></i>'
         ]

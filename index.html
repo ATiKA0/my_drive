@@ -31,7 +31,7 @@
 	</div>
 	<div class="class_10">
 		<div class="class_11">
-			<button onclick="upload.send()" class="class_12">
+			<button onclick="action.showNewFolder()" class="class_12">
 				+New Folder
 			</button>
 			<div class="class_13">
@@ -39,11 +39,11 @@
 					Drive Space
 				</div>
 				<div class="class_14">
-					<div class="js-drive-space-percent class_15">
+					<div class="js-drive-space-percent class_15" style="width: 0%;">
 					</div>
 				</div>
 				<div class="js-drive-space-text class_9">
-					8Gb / 10Gb
+					0 GB / 10 GB
 				</div>
 			</div>
 			<div id="MY DRIVE" onclick="mode.set(this.id)" class="class_16">
@@ -272,6 +272,16 @@
 		</div>
 	</div>
 	<!-- end sub menu-->
+	<!-- start new folder-->
+	<div class="new-folder hide" onclick="this.classList.add('hide')">
+		<div onclick="event.stopPropagation()">
+			<button onclick="action.hideNewFolder()" class="close-button">+</button>
+			<h3>New Folder</h3>
+			<input class="new-folder-input" type="text">
+			<button onclick="action.newFolder(this)" class="class_42">Save</button>
+		</div>
+	</div>
+	<!-- end new folder-->
 </body>
 
 </html>
@@ -279,7 +289,7 @@
 <script>
 	let ROWS = [];
 	let LOGGED_IN = false;
-	let USERNAME= false;
+	let USERNAME = false;
 
 	let mode = {
 		current: 'MY DRIVE',
@@ -379,9 +389,9 @@
 						console.log(xhr.responseText);
 
 						let obj = JSON.parse(xhr.responseText);
-						
+
 						//display username
-						if(!USERNAME){
+						if (!USERNAME) {
 							USERNAME = obj.username;
 							document.querySelector('.username').innerHTML = obj.username;
 						}
@@ -394,12 +404,13 @@
 						if (obj.succes && obj.data_type == "get_files") {
 
 							//update drive space
-							let driveOccupied = (obj.drive_occupied / (1024*1024*1024)).toFixed(2);
+							let driveOccupied = (obj.drive_occupied / (1024 * 1024 * 1024)).toFixed(2);
 							let drivePercent = Math.round((driveOccupied / obj.drive_total) * 100);
 
-							document.querySelector(".js-drive-space-text").innerHTML = `${driveOccupied} GB / ${obj.drive_total} GB`;
-							document.querySelector(".js-drive-space-percent").style.width = `${drivePercent}%`;
-							console.log(driveOccupied)
+							document.querySelector(".js-drive-space-text").innerHTML =
+								`${driveOccupied} GB / ${obj.drive_total} GB`;
+							document.querySelector(".js-drive-space-percent").style.width =
+								`${drivePercent}%`;
 
 							ROWS = obj.rows;
 							for (let i = 0; i < obj.rows.length; i++) {
@@ -581,6 +592,76 @@
 			document.querySelector('.js-info-no-file').classList.remove('hide');
 			document.querySelector('.js-file-info').classList.add('hide');
 		}
+	};
+
+	const action = {
+
+		uploading: false,
+
+		newFolder: () => {
+			let box = document.querySelector(".new-folder");
+			let text = box.querySelector("input").value.trim();
+			box.classList.add("hide");
+
+			let obj = {};
+			obj.data_type = "new_folder";
+			obj.name = text;
+
+			action.send(obj);
+		},
+
+		showNewFolder: () => {
+
+			let box = document.querySelector(".new-folder");
+			box.classList.remove("hide");
+			box.querySelector("input").value = "";
+			box.querySelector("input").focus();
+		},
+
+		hideNewFolder: () => document.querySelector(".new-folder").classList.add("hide"),
+
+		send: (obj) => {
+
+			if (action.uploading) {
+				alert("Please wait for the previous upload to finish!");
+				return;
+			}
+			action.uploading = true;
+			let myForm = new FormData();
+
+			for (key in obj) {
+				myForm.append(key, obj[key]);
+			}
+
+			let xhr = new XMLHttpRequest();
+
+			xhr.addEventListener('error', (e) => {
+				alert("An error occured! Please check yout internet connection!");
+			});
+
+			xhr.addEventListener('readystatechange', () => {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						let objj = JSON.parse(xhr.responseText);
+						if (objj.succes) {
+							table.refresh();
+						} else {
+							alert("Could not complete operation!");
+						}
+					} else {
+						console.log(xhr.responseText);
+						alert("An error occured! Please try again later!");
+					}
+					action.uploading = false;
+				}
+			});
+
+			xhr.open('post', 'api.php', true);
+			xhr.send(myForm);
+
+			table.refresh();
+		}
+
 	};
 
 	table.refresh('');

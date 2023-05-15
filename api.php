@@ -13,7 +13,7 @@ if (!$info['LOGGED_IN'] && ($info['data_type'] != 'user_signup' && $info['data_t
 }
 
 $info['username'] = $_SESSION['USER']['username'] ?? 'User';
-$info['drive_occupied'] = getDriveSpace($_SESSION['USER']['id']);
+$info['drive_occupied'] = getDriveSpace($_SESSION['USER']['id']) ?? "User";
 $info['drive_total'] = 10;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
@@ -46,6 +46,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $info['succes'] = true;
             }
             break;
+        case ('new_folder'):
+
+            //save to database
+            $name = addslashes($_POST['name']);
+            $dateCreated = date('Y-m-d H:i:s');
+            $user_id = $_SESSION['USER']['id'] ?? 0;
+
+            $query = "INSERT INTO folders (name, user_id, date_created) values ('$name', '$user_id', '$dateCreated')";
+            query($query);
+            $info['succes'] = true;
+
+            break;
 
         case ('get_files'):
 
@@ -54,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
             switch ($mode) {
                 case 'MY DRIVE':
+                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
                     $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
                     break;
 
@@ -70,15 +83,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     break;
 
                 default:
+                $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
                     $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
                     break;
             }
 
+            if(!empty($queryFolder))
+                $rowsFolder = query($queryFolder);
+
+            if(empty($rowsFolder))
+                $rowsFolder = [];
+
             $rows = query($query);
 
-            if ($rows) {
+            if(empty($rows))
+                $rows = [];
+
+            $rows = array_merge($rowsFolder, $rows);
+
+            if (!empty($rows)) {
 
                 foreach ($rows as $key => $row) {
+
+                    if(empty($row['file_type'])){
+                        $rows[$key]['file_type'] = 'folder';
+                        $row['file_type'] = 'folder';
+
+                        $rows[$key]['date_updated'] = $row['date_created'];
+                        $row['date_updated'] = $row['date_created'];
+
+                        $rows[$key]['file_size'] = 0;
+                        $row['file_size'] = 0;
+
+                        $rows[$key]['file_name'] = $row['name'];
+                        $row['file_name'] = $row['name'];
+                        
+                        $info['van'] = true;
+                    }
                     $parts = explode(".", $row['file_name']);
                     $ext = strtolower(end($parts));
                     $rows[$key]['icon'] = getIcon($row['file_type'], $ext);
