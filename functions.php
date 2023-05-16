@@ -2,7 +2,8 @@
 
 $con = mysqli_connect('localhost', 'root', '', 'mydrive_db');
 
-function getIcon($type, $ext = null){
+function getIcon($type, $ext = null)
+{
 
 
     $icons = [
@@ -21,14 +22,13 @@ function getIcon($type, $ext = null){
         ]
     ];
 
-    if(!array_key_exists($type,$icons))
+    if (!array_key_exists($type, $icons))
         return $icons['undefined'];
 
-    if($type == 'application/octet-stream')
+    if ($type == 'application/octet-stream')
         return $icons[$type][$ext];
 
     return $icons[$type];
-
 };
 function query($query)
 {
@@ -63,10 +63,11 @@ function isLoggedIn()
     return false;
 }
 
-function getDriveSpace($userId){
+function getDriveSpace($userId)
+{
     $query = "SELECT SUM(file_size) AS sum FROM mydrive WHERE user_id = '$userId'";
     $row = query($query);
-    if($row){
+    if ($row) {
         return $row[0]['sum'];
     }
 

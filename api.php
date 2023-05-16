@@ -39,9 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $filePath = $destination;
                 $user_id = $_SESSION['USER']['id'] ?? 0;
                 $fileSize = $file['size'];
+                $folder_id = $_POST['folder_id'] ?? 0;
 
-                $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated) 
-            values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated')";
+                $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated, folder_id) 
+            values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated', '$folder_id')";
                 query($query);
                 $info['succes'] = true;
             }
@@ -52,8 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             $name = addslashes($_POST['name']);
             $dateCreated = date('Y-m-d H:i:s');
             $user_id = $_SESSION['USER']['id'] ?? 0;
+            $parent_id = $_POST['folder_id'] ?? 0;
 
-            $query = "INSERT INTO folders (name, user_id, date_created) values ('$name', '$user_id', '$dateCreated')";
+            $query = "INSERT INTO folders (name, user_id, date_created, parent) values ('$name', '$user_id', '$dateCreated', '$parent_id')";
             query($query);
             $info['succes'] = true;
 
@@ -63,11 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
             $user_id = $_SESSION['USER']['id'] ?? null;
             $mode = $_POST['mode'];
+            $folder_id = $_POST['folder_id'] ?? 0;
 
             switch ($mode) {
                 case 'MY DRIVE':
-                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' ORDER BY id DESC LIMIT 30";
+                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && folder_id = '$folder_id' ORDER BY id DESC LIMIT 30";
                     break;
 
                 case 'FAVORITES':
@@ -83,20 +86,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     break;
 
                 default:
-                $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' ORDER BY id DESC LIMIT 30";
+                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && folder_id = '$folder_id' ORDER BY id DESC LIMIT 30";
                     break;
             }
 
-            if(!empty($queryFolder))
-                $rowsFolder = query($queryFolder);
+            $rowsFolder = query($queryFolder);
 
-            if(empty($rowsFolder))
+            if (empty($rowsFolder))
                 $rowsFolder = [];
 
             $rows = query($query);
 
-            if(empty($rows))
+            if (empty($rows))
                 $rows = [];
 
             $rows = array_merge($rowsFolder, $rows);
@@ -105,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
                 foreach ($rows as $key => $row) {
 
-                    if(empty($row['file_type'])){
+                    if (empty($row['file_type'])) {
                         $rows[$key]['file_type'] = 'folder';
                         $row['file_type'] = 'folder';
 
@@ -117,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
                         $rows[$key]['file_name'] = $row['name'];
                         $row['file_name'] = $row['name'];
-                        
+
                         $info['van'] = true;
                     }
                     $parts = explode(".", $row['file_name']);
@@ -193,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             if (!empty($row)) {
 
                 $row = $row[0];
-                if(password_verify($password, $row['password'])){
+                if (password_verify($password, $row['password'])) {
                     //all good
                     $info['succes'] = true;
                     $_SESSION['USER'] = $row;
@@ -203,10 +205,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             $info['errors']['email'] = "Wrong email or password";
 
             break;
-        
-        case('user_logout'):
 
-            if(isset($_SESSION['USER']))
+        case ('user_logout'):
+
+            if (isset($_SESSION['USER']))
                 unset($_SESSION['USER']);
 
             $info['succes'] = true;

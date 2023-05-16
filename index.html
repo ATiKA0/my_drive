@@ -77,22 +77,18 @@
 		</div>
 		<div class="class_22">
 			<div class="class_23">
-				<div class="class_24">
+				<div onclick="table.changeFolderById(0)" class="class_24">
 					My Drive
-					<br>
 				</div>
 				<div class="class_25">
 					My First Folder
-					<br>
 				</div>
 				<div class="class_26">
 					My Second Folder
-					<br>
 				</div>
 			</div>
 			<h1 class="js-mode-title class_27">
 				MY DRIVE
-				<br>
 			</h1>
 			<div class="class_28">
 				<table oncontextmenu="submenu.show(event)" class="item_class_0 class_29">
@@ -129,7 +125,7 @@
 
 					</thead>
 
-					<tbody id="table-body" onclick="table.select(event)">
+					<tbody id="table-body" ondblclick="table.changeFolder(event)" onclick="table.select(event)">
 
 					</tbody>
 				</table>
@@ -290,6 +286,7 @@
 	let ROWS = [];
 	let LOGGED_IN = false;
 	let USERNAME = false;
+	let FOLDER_ID = 0;
 
 	let mode = {
 		current: 'MY DRIVE',
@@ -359,6 +356,31 @@
 			}
 		},
 
+		changeFolderById: (id) => {
+			FOLDER_ID = parseInt(id);
+			table.refresh();
+		},
+
+		changeFolder: (e) => {
+
+			let item = e.target;
+
+			while (item.tagName != 'TR' && item.tagName != 'BODY') {
+				item = item.parentNode;
+			}
+
+			if (item.tagName == 'TR') {
+
+				let folderId = item.getAttribute("folder_id");
+
+				if (folderId != null) {
+					FOLDER_ID = parseInt(folderId);
+					table.refresh();
+				}
+			}
+
+		},
+
 		refresh: (MODE = 'MY DRIVE') => {
 
 			//show a loader
@@ -377,6 +399,7 @@
 
 			myForm.append('data_type', 'get_files');
 			myForm.append('mode', MODE);
+			myForm.append('folder_id', FOLDER_ID);
 
 			let xhr = new XMLHttpRequest();
 
@@ -417,6 +440,10 @@
 
 								let tr = document.createElement('tr');
 								tr.setAttribute('id', 'tr_' + i);
+
+								//set folder_id attribute when this is  a folder
+								if (obj.rows[i].file_type == 'folder')
+									tr.setAttribute('folder_id', obj.rows[i].id);
 
 								// set favorite star
 								let star = '<i class="bi bi-star class_34">';
@@ -501,6 +528,7 @@
 			let myForm = new FormData();
 
 			myForm.append('data_type', 'upload_files');
+			myForm.append('folder_id', FOLDER_ID);
 
 			for (let i = 0; i < files.length; i++) {
 				myForm.append('file' + i, files[i]);
