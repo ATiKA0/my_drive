@@ -80,12 +80,14 @@
 				<div onclick="table.changeFolderById(0)" class="class_24">
 					My Drive
 				</div>
-				<div class="class_25">
-					My First Folder
-				</div>
-				<div class="class_26">
-					My Second Folder
-				</div>
+				<span id="breadcrumbs">
+					<!--<div class="class_25">
+						My First Folder
+					</div>
+					<div class="class_26">
+						My Second Folder
+					</div>-->
+				</span>
 			</div>
 			<h1 class="js-mode-title class_27">
 				MY DRIVE
@@ -244,10 +246,10 @@
 				Move
 			</div>
 		</div>
-		<div class="class_46">
+		<div onclick="table.deleteRow()" class="class_46">
 			<i class="bi bi-trash3-fill class_17">
 			</i>
-			<div class="class_9">
+			<div  class="class_9">
 				Delete
 			</div>
 		</div>
@@ -308,12 +310,13 @@
 	const submenu = {
 		show: (e) => {
 			e.preventDefault();
+
+			table.select(e, 'rightclick');
+
 			let menu = document.getElementById('submenu');
 			menu.style.left = e.clientX + "px";
 			menu.style.top = e.clientY + "px";
 			menu.classList.remove('hide');
-
-			table.select(e);
 		},
 		hide: () => {
 			document.getElementById('submenu').classList.add('hide');
@@ -325,7 +328,7 @@
 		selected: null,
 		selected_id: null,
 
-		select: (e) => {
+		select: (e, mode = 'leftclick') => {
 
 			let old_selected_id = table.selected_id;
 			table.selected = null;
@@ -344,7 +347,7 @@
 			}
 
 			if (item.tagName == 'TR') {
-				if (old_selected_id == null || item.getAttribute('id') !== old_selected_id) {
+				if (mode == 'rightclick' || (old_selected_id == null || item.getAttribute('id') !== old_selected_id)) {
 					table.selected = item;
 					table.selected_id = item.getAttribute('id');
 					table.selected.classList.add('class_38');
@@ -435,11 +438,27 @@
 							document.querySelector(".js-drive-space-percent").style.width =
 								`${drivePercent}%`;
 
+							//update breadcrumbs
+							let crumbs = document.querySelector("#breadcrumbs");
+							crumbs.innerHTML = "";
+							for (let i = 0; i < obj.breadcrumbs.length; i++) {
+								
+								crumbs.innerHTML += `<div class="class_25">${obj.breadcrumbs[i].name}</div>`;
+								
+							}
+
 							ROWS = obj.rows;
 							for (let i = 0; i < obj.rows.length; i++) {
 
 								let tr = document.createElement('tr');
 								tr.setAttribute('id', 'tr_' + i);
+
+								//mark row as a folder
+								if (obj.rows[i].file_type == "folder") {
+									tr.setAttribute('type', 'folder');
+								} else {
+									tr.setAttribute('type', 'file');
+								}
 
 								//set folder_id attribute when this is  a folder
 								if (obj.rows[i].file_type == 'folder')
@@ -476,6 +495,27 @@
 			xhr.send(myForm);
 			//recreate table
 
+		},
+
+		deleteRow: () => {
+
+			if (!table.selected) {
+				alert("Please select a row to delete!");
+				return;
+			}
+
+			if (!confirm("Are you sure want to delete the item?")) {
+				return;
+			}
+
+			let obj = {};
+
+			obj.data_type = 'delete_row';
+			obj.file_type = table.selected.getAttribute("type");
+			let id = table.selected.getAttribute("id").replace("tr_", "");
+			obj.id = ROWS[id].id;
+
+			action.send(obj);
 		},
 
 		logout: () => {
@@ -634,6 +674,7 @@
 			let obj = {};
 			obj.data_type = "new_folder";
 			obj.name = text;
+			obj.folder_id = FOLDER_ID;
 
 			action.send(obj);
 		},
@@ -670,12 +711,8 @@
 			xhr.addEventListener('readystatechange', () => {
 				if (xhr.readyState == 4) {
 					if (xhr.status == 200) {
-						let objj = JSON.parse(xhr.responseText);
-						if (objj.succes) {
-							table.refresh();
-						} else {
-							alert("Could not complete operation!");
-						}
+						action.handleResult(xhr.responseText);
+
 					} else {
 						console.log(xhr.responseText);
 						alert("An error occured! Please try again later!");
@@ -688,6 +725,21 @@
 			xhr.send(myForm);
 
 			table.refresh();
+		},
+
+		handleResult: (result) => {
+
+			alert(result);
+
+			let obj = JSON.parse(result);
+
+			if (obj.succes) {
+				table.refresh();
+			} else {
+				alert("Could not complete operation!");
+			}
+
+			alert(result);
 		}
 
 	};
