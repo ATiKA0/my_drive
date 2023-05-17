@@ -1,749 +1,231 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>my drive main page</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="assets/css/bootstrap-icons.css" />
+        <link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
+    </head>
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>my drive main page</title>
-	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
-</head>
-
-<body>
-
-
-	<div class="class_1">
-		<div class="class_2">
-			<img src="assets/images/letter-o-shuriken-gradient-color-logo-modern_487879-654.jpg" class="class_3">
-		</div>
-		<div class="class_4">
-			<h1 class="class_5">
-				MY DRIVE
-				<i class="bi bi-cloud-arrow-up-fill class_6"></i>
-			</h1>
-		</div>
-		<div class="class_7">
-			<img src="assets/images/beautiful-sincere-happy-girl-smiling-laughing_176420-9693.jpg" class="class_8">
-			<div class="class_9">
-				Hi <span class="username">User</span> <a href="#" onclick="table.logout()">[logout]</a>
-			</div>
-		</div>
-	</div>
-	<div class="class_10">
-		<div class="class_11">
-			<button onclick="action.showNewFolder()" class="class_12">
-				+New Folder
-			</button>
-			<div class="class_13">
-				<div class="class_9">
-					Drive Space
-				</div>
-				<div class="class_14">
-					<div class="js-drive-space-percent class_15" style="width: 0%;">
-					</div>
-				</div>
-				<div class="js-drive-space-text class_9">
-					0 GB / 10 GB
-				</div>
-			</div>
-			<div id="MY DRIVE" onclick="mode.set(this.id)" class="class_16">
-				<i class="bi bi-cloud-arrow-up-fill class_17">
-				</i>
-				<div class="class_9">
-					My Drive
-				</div>
-			</div>
-			<div id="FAVORITES" onclick="mode.set(this.id)" class="class_18">
-				<i class="bi bi-star-fill class_17">
-				</i>
-				<div class="class_9">
-					Favorites
-				</div>
-			</div>
-			<div id="RECENT" onclick="mode.set(this.id)" class="class_18">
-				<i class="bi bi-alarm-fill class_17">
-				</i>
-				<div class="class_9">
-					Recent
-				</div>
-			</div>
-			<div id="TRASH" onclick="mode.set(this.id)" class="class_18">
-				<i class="bi bi-trash3-fill class_17">
-				</i>
-				<div class="class_9">
-					Trash
-				</div>
-			</div>
-		</div>
-		<div class="class_22">
-			<div class="class_23">
-				<div onclick="table.changeFolderById(0)" class="class_24">
-					My Drive
-				</div>
-				<span id="breadcrumbs">
-					<!--<div class="class_25">
+    <body>
+        <div class="class_1">
+            <div class="class_2">
+                <img
+                    src="assets/images/letter-o-shuriken-gradient-color-logo-modern_487879-654.jpg"
+                    class="class_3" />
+            </div>
+            <div class="class_4">
+                <h1 class="class_5">
+                    MY DRIVE
+                    <i class="bi bi-cloud-arrow-up-fill class_6"></i>
+                </h1>
+            </div>
+            <div class="class_7">
+                <img
+                    src="assets/images/beautiful-sincere-happy-girl-smiling-laughing_176420-9693.jpg"
+                    class="class_8" />
+                <div class="class_9">
+                    Hi <span class="username">User</span>
+                    <a href="#" onclick="table.logout()">[logout]</a>
+                </div>
+            </div>
+        </div>
+        <div class="class_10">
+            <div class="class_11">
+                <button onclick="action.showNewFolder()" class="class_12">
+                    +New Folder
+                </button>
+                <div class="class_13">
+                    <div class="class_9">Drive Space</div>
+                    <div class="class_14">
+                        <div
+                            class="js-drive-space-percent class_15"
+                            style="width: 0%"></div>
+                    </div>
+                    <div class="js-drive-space-text class_9">0 GB / 10 GB</div>
+                </div>
+                <div id="MY DRIVE" onclick="mode.set(this.id)" class="class_16">
+                    <i class="bi bi-cloud-arrow-up-fill class_17"> </i>
+                    <div class="class_9">My Drive</div>
+                </div>
+                <div
+                    id="FAVORITES"
+                    onclick="mode.set(this.id)"
+                    class="class_18">
+                    <i class="bi bi-star-fill class_17"> </i>
+                    <div class="class_9">Favorites</div>
+                </div>
+                <div id="RECENT" onclick="mode.set(this.id)" class="class_18">
+                    <i class="bi bi-alarm-fill class_17"> </i>
+                    <div class="class_9">Recent</div>
+                </div>
+                <div id="TRASH" onclick="mode.set(this.id)" class="class_18">
+                    <i class="bi bi-trash3-fill class_17"> </i>
+                    <div class="class_9">Trash</div>
+                </div>
+            </div>
+            <div class="class_22">
+                <div id="breadcrumbs" class="class_23">
+                    <div onclick="table.changeFolderById(0)" class="class_24">
+                        My Drive
+                    </div>
+                    <!--<div class="class_25">
 						My First Folder
 					</div>
 					<div class="class_26">
 						My Second Folder
 					</div>-->
-				</span>
-			</div>
-			<h1 class="js-mode-title class_27">
-				MY DRIVE
-			</h1>
-			<div class="class_28">
-				<table oncontextmenu="submenu.show(event)" class="item_class_0 class_29">
+                </div>
+                <h1 class="js-mode-title class_27">MY DRIVE</h1>
+                <div class="class_28">
+                    <table
+                        oncontextmenu="submenu.show(event)"
+                        class="item_class_0 class_29">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
 
-					<thead>
+                                <th scope="col">File Name</th>
+                                <th scope="col"></th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Updated</th>
+                                <th scope="col">Size</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
 
-						<tr>
-							<th scope="col">
-								#
-							</th>
+                        <tbody
+                            id="table-body"
+                            ondblclick="table.changeFolder(event)"
+                            onclick="table.select(event)"></tbody>
+                    </table>
+                </div>
+                <div class="class_41">
+                    <button class="class_42">Prev</button>
+                    <button class="class_43">Next</button>
+                    <div class="class_44"></div>
+                </div>
+            </div>
+            <div class="class_47">
+                <h1 class="class_48">
+                    File Details
+                    <br />
+                </h1>
+                <div class="class_28"></div>
+                <div class="js-file-info hide class_49">
+                    <table class="item_class_2 class_50">
+                        <tbody>
+                            <tr>
+                                <th>File:</th>
+                                <td id="file"></td>
+                            </tr>
+                            <tr>
+                                <th>Type:</th>
 
-							<th scope="col">
-								File Name
-							</th>
-							<th scope="col">
+                                <td id="type"></td>
+                            </tr>
+                            <tr>
+                                <th>Size:</th>
 
-							</th>
-							<th scope="col">
-								Type
-							</th>
-							<th scope="col">
-								Created
-							</th>
-							<th scope="col">
-								Updated
-							</th>
-							<th scope="col">
-								Size
-							</th>
-							<th scope="col">
-								Action
-							</th>
-						</tr>
-
-					</thead>
-
-					<tbody id="table-body" ondblclick="table.changeFolder(event)" onclick="table.select(event)">
-
-					</tbody>
-				</table>
-			</div>
-			<div class="class_41">
-				<button class="class_42">
-					Prev
-				</button>
-				<button class="class_43">
-					Next
-				</button>
-				<div class="class_44">
-				</div>
-			</div>
-		</div>
-		<div class="class_47">
-			<h1 class="class_48">
-				File Details
-				<br>
-			</h1>
-			<div class="class_28">
-			</div>
-			<div class="js-file-info hide class_49">
-				<table class="item_class_2 class_50">
-
-					<tbody>
-						<tr>
-							<th>
-								File:
-							</th>
-							<td id="file">
-							</td>
-						</tr>
-						<tr>
-							<th>
-								Type:
-							</th>
-
-							<td id="type">
-							</td>
-						</tr>
-						<tr>
-							<th>
-								Size:
-							</th>
-
-							<td id="size">
-							</td>
-						</tr>
-						<tr>
-							<th>
-								Date Added:
-							</th>
-							<td id="dateAdded">
-							</td>
-						</tr>
-						<tr>
-							<th>
-								Date Modified:
-							</th>
-							<td id="dateModified">
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="js-info-no-file class_51">
-				<i class="bi bi-info-circle-fill class_17">
-				</i>
-				<div class="class_9">
-					No file was selected
-				</div>
-			</div>
-			<label ondrop="upload.drop(event)" ondragover="upload.dragOver(event)"
-				ondragleave="upload.dropZone.removeHighlight()" class="drop-zone">
-				<i class="bi bi-cloud-arrow-up-fill class_6"></i>
-				Drag and drop files here or click to upload
-				<input onchange="upload.send(this.files)" type="file" class="hide" multiple>
-				<div class="js-prog-holder hide class_13"
-					style="position: static; height: auto; background-color: transparent;">
-					<div class="class_14">
-						<div class="js-prog class_15">
-						</div>
-					</div>
-					<div class="js-prog-text class_9">
-						50%
-					</div>
-					<button onclick="upload.cancel()" class="class_42">
-						Abort
-					</button>
-				</div>
-			</label>
-		</div>
-	</div>
-	<!--modals-->
-	<!--sub menu-->
-	<div id="submenu" class="class_45 hide" style="position: absolute;">
-		<div class="class_46">
-			<i class="bi bi-cloud-download-fill class_17">
-			</i>
-			<div class="class_9">
-				Download
-			</div>
-		</div>
-		<div class="class_46">
-			<i class="bi bi-pencil-square class_17">
-			</i>
-			<div class="class_9">
-				Edit
-			</div>
-		</div>
-		<div class="class_46">
-			<i class="bi bi-folder-x class_17">
-			</i>
-			<div class="class_9">
-				Move
-			</div>
-		</div>
-		<div onclick="table.deleteRow()" class="class_46">
-			<i class="bi bi-trash3-fill class_17">
-			</i>
-			<div  class="class_9">
-				Delete
-			</div>
-		</div>
-		<div class="class_46">
-			<i class="bi bi-share-fill class_17">
-			</i>
-			<div class="class_9">
-				Share
-			</div>
-		</div>
-		<div class="class_46">
-			<i class="bi bi-star-fill class_17">
-			</i>
-			<div class="class_9">
-				Add to favorites
-				<br>
-			</div>
-		</div>
-	</div>
-	<!-- end sub menu-->
-	<!-- start new folder-->
-	<div class="new-folder hide" onclick="this.classList.add('hide')">
-		<div onclick="event.stopPropagation()">
-			<button onclick="action.hideNewFolder()" class="close-button">+</button>
-			<h3>New Folder</h3>
-			<input class="new-folder-input" type="text">
-			<button onclick="action.newFolder(this)" class="class_42">Save</button>
-		</div>
-	</div>
-	<!-- end new folder-->
-</body>
-
+                                <td id="size"></td>
+                            </tr>
+                            <tr>
+                                <th>Date Added:</th>
+                                <td id="dateAdded"></td>
+                            </tr>
+                            <tr>
+                                <th>Date Modified:</th>
+                                <td id="dateModified"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="js-info-no-file class_51">
+                    <i class="bi bi-info-circle-fill class_17"> </i>
+                    <div class="class_9">No file was selected</div>
+                </div>
+                <label
+                    ondrop="upload.drop(event)"
+                    ondragover="upload.dragOver(event)"
+                    ondragleave="upload.dropZone.removeHighlight()"
+                    class="drop-zone">
+                    <i class="bi bi-cloud-arrow-up-fill class_6"></i>
+                    Drag and drop files here or click to upload
+                    <input
+                        onchange="upload.send(this.files)"
+                        type="file"
+                        class="hide"
+                        multiple />
+                    <div
+                        class="js-prog-holder hide class_13"
+                        style="
+                            position: static;
+                            height: auto;
+                            background-color: transparent;
+                        ">
+                        <div class="class_14">
+                            <div class="js-prog class_15"></div>
+                        </div>
+                        <div class="js-prog-text class_9">50%</div>
+                        <button onclick="upload.cancel()" class="class_42">
+                            Abort
+                        </button>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <!--modals-->
+        <!--sub menu-->
+        <div id="submenu" class="class_45 hide" style="position: absolute">
+            <div class="class_46">
+                <i class="bi bi-cloud-download-fill class_17"> </i>
+                <div class="class_9">Download</div>
+            </div>
+            <div class="class_46">
+                <i class="bi bi-pencil-square class_17"> </i>
+                <div class="class_9">Edit</div>
+            </div>
+            <div class="class_46">
+                <i class="bi bi-folder-x class_17"> </i>
+                <div class="class_9">Move</div>
+            </div>
+            <div onclick="table.deleteRow()" class="class_46">
+                <i class="bi bi-trash3-fill class_17"> </i>
+                <div class="class_9">Delete</div>
+            </div>
+            <div class="class_46">
+                <i class="bi bi-share-fill class_17"> </i>
+                <div class="class_9">Share</div>
+            </div>
+            <div class="class_46">
+                <i class="bi bi-star-fill class_17"> </i>
+                <div class="class_9">
+                    Add to favorites
+                    <br />
+                </div>
+            </div>
+        </div>
+        <!-- end sub menu-->
+        <!-- start new folder-->
+        <div class="new-folder hide" onclick="this.classList.add('hide')">
+            <div onclick="event.stopPropagation()">
+                <button onclick="action.hideNewFolder()" class="close-button">
+                    +
+                </button>
+                <h3>New Folder</h3>
+                <input class="new-folder-input" type="text" />
+                <button onclick="action.newFolder(this)" class="class_42">
+                    Save
+                </button>
+            </div>
+        </div>
+        <!-- end new folder-->
+    </body>
 </html>
 
-<script>
-	let ROWS = [];
-	let LOGGED_IN = false;
-	let USERNAME = false;
-	let FOLDER_ID = 0;
-
-	let mode = {
-		current: 'MY DRIVE',
-
-		set: (m) => {
-			mode.current = m;
-			document.querySelector(".js-mode-title").innerHTML = mode.current;
-			let selected = document.querySelector('.class_16');
-			selected.classList.remove('class_16');
-			selected.classList.add('class_18');
-			let new_selected = document.getElementById(m);
-			new_selected.classList.remove('class_18');
-			new_selected.classList.add('class_16');
-
-			table.refresh(mode.current);
-		}
-	};
-
-	const submenu = {
-		show: (e) => {
-			e.preventDefault();
-
-			table.select(e, 'rightclick');
-
-			let menu = document.getElementById('submenu');
-			menu.style.left = e.clientX + "px";
-			menu.style.top = e.clientY + "px";
-			menu.classList.remove('hide');
-		},
-		hide: () => {
-			document.getElementById('submenu').classList.add('hide');
-		}
-	};
-
-	const table = {
-
-		selected: null,
-		selected_id: null,
-
-		select: (e, mode = 'leftclick') => {
-
-			let old_selected_id = table.selected_id;
-			table.selected = null;
-			table.selected_id = null;
-
-			let tbody = document.getElementById('table-body');
-			for (let i = 0; i < tbody.children.length; i++) {
-				tbody.children[i].classList.remove('class_38');
-
-			}
-
-			let item = e.target;
-
-			while (item.tagName != 'TR' && item.tagName != 'BODY') {
-				item = item.parentNode;
-			}
-
-			if (item.tagName == 'TR') {
-				if (mode == 'rightclick' || (old_selected_id == null || item.getAttribute('id') !== old_selected_id)) {
-					table.selected = item;
-					table.selected_id = item.getAttribute('id');
-					table.selected.classList.add('class_38');
-
-					fileInfo.show(item.getAttribute('id').replace("tr_", ""));
-				} else {
-					fileInfo.hide();
-				}
-			}
-		},
-
-		changeFolderById: (id) => {
-			FOLDER_ID = parseInt(id);
-			table.refresh();
-		},
-
-		changeFolder: (e) => {
-
-			let item = e.target;
-
-			while (item.tagName != 'TR' && item.tagName != 'BODY') {
-				item = item.parentNode;
-			}
-
-			if (item.tagName == 'TR') {
-
-				let folderId = item.getAttribute("folder_id");
-
-				if (folderId != null) {
-					FOLDER_ID = parseInt(folderId);
-					table.refresh();
-				}
-			}
-
-		},
-
-		refresh: (MODE = 'MY DRIVE') => {
-
-			//show a loader
-			let tbody = document.querySelector('#table-body');
-			tbody.innerHTML = `
-			<tr>
-				<td colspan = '10' style='text-align:center;padding:10px'>
-					<img src="./assets/images/loader.gif" style='width:100px;height:100px'>
-				</td>
-			</tr>`;
-
-			//hide file info
-			fileInfo.hide();
-
-			let myForm = new FormData();
-
-			myForm.append('data_type', 'get_files');
-			myForm.append('mode', MODE);
-			myForm.append('folder_id', FOLDER_ID);
-
-			let xhr = new XMLHttpRequest();
-
-			xhr.addEventListener('readystatechange', () => {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-
-						let tbody = document.querySelector('#table-body');
-						tbody.innerHTML = "";
-						console.log(xhr.responseText);
-
-						let obj = JSON.parse(xhr.responseText);
-
-						//display username
-						if (!USERNAME) {
-							USERNAME = obj.username;
-							document.querySelector('.username').innerHTML = obj.username;
-						}
-
-						//check user logged in
-						LOGGED_IN = obj.LOGGED_IN;
-						if (!LOGGED_IN)
-							window.location.href = 'login.html';
-
-						if (obj.succes && obj.data_type == "get_files") {
-
-							//update drive space
-							let driveOccupied = (obj.drive_occupied / (1024 * 1024 * 1024)).toFixed(2);
-							let drivePercent = Math.round((driveOccupied / obj.drive_total) * 100);
-
-							document.querySelector(".js-drive-space-text").innerHTML =
-								`${driveOccupied} GB / ${obj.drive_total} GB`;
-							document.querySelector(".js-drive-space-percent").style.width =
-								`${drivePercent}%`;
-
-							//update breadcrumbs
-							let crumbs = document.querySelector("#breadcrumbs");
-							crumbs.innerHTML = "";
-							for (let i = 0; i < obj.breadcrumbs.length; i++) {
-								
-								crumbs.innerHTML += `<div class="class_25">${obj.breadcrumbs[i].name}</div>`;
-								
-							}
-
-							ROWS = obj.rows;
-							for (let i = 0; i < obj.rows.length; i++) {
-
-								let tr = document.createElement('tr');
-								tr.setAttribute('id', 'tr_' + i);
-
-								//mark row as a folder
-								if (obj.rows[i].file_type == "folder") {
-									tr.setAttribute('type', 'folder');
-								} else {
-									tr.setAttribute('type', 'file');
-								}
-
-								//set folder_id attribute when this is  a folder
-								if (obj.rows[i].file_type == 'folder')
-									tr.setAttribute('folder_id', obj.rows[i].id);
-
-								// set favorite star
-								let star = '<i class="bi bi-star class_34">';
-								if (obj.rows[i].favorite == 1)
-									star = '<i class="bi bi-star-fill class_34">'
-
-								tr.innerHTML = `
-									<td>${obj.rows[i].icon}</td>
-									<td style="max-width:200px">${obj.rows[i].file_name}</td>
-									<td>${star}</td>
-									<td>${obj.rows[i].file_type}</td>
-									<td>${obj.rows[i].date_created}</td>
-									<td>${obj.rows[i].date_updated}</td>
-									<td>${obj.rows[i].file_size}</td>
-									<td><i class="bi bi-cloud-download-fill class_34"></i></td>
-								`;
-								tbody.appendChild(tr);
-							}
-
-						} else {
-							tbody.innerHTML =
-								"<tr><td colspan = '10' style ='text-align:center'>No files found!</td></tr>";
-						}
-					} else
-						console.log(xhr.responseText);
-				}
-			});
-
-			xhr.open('post', 'api.php', true);
-			xhr.send(myForm);
-			//recreate table
-
-		},
-
-		deleteRow: () => {
-
-			if (!table.selected) {
-				alert("Please select a row to delete!");
-				return;
-			}
-
-			if (!confirm("Are you sure want to delete the item?")) {
-				return;
-			}
-
-			let obj = {};
-
-			obj.data_type = 'delete_row';
-			obj.file_type = table.selected.getAttribute("type");
-			let id = table.selected.getAttribute("id").replace("tr_", "");
-			obj.id = ROWS[id].id;
-
-			action.send(obj);
-		},
-
-		logout: () => {
-
-			let myForm = new FormData();
-
-			myForm.append('data_type', 'user_logout');
-
-			let xhr = new XMLHttpRequest();
-
-			xhr.addEventListener('readystatechange', () => {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-
-						window.location.href = 'login.html';
-
-					} else
-						console.log(xhr.responseText);
-				}
-			});
-
-			xhr.open('post', 'api.php', true);
-			xhr.send(myForm);
-			//recreate table
-
-		}
-	};
-
-	const upload = {
-		cancelled: false,
-		uploading: false,
-
-		cancel: () => {
-			upload.cancelled = true;
-		},
-
-		resetProgress: () => {
-			document.querySelector(".js-prog").style.width = "0%";
-			document.querySelector(".js-prog-text").innerHTML = "0%";
-			document.querySelector(".js-prog-holder").classList.add("hide");
-		},
-
-		send: (files) => {
-			if (upload.uploading) {
-				alert("Please wait for the previous upload to finish!");
-				return;
-			}
-			upload.uploading = true;
-			upload.cancelled = false;
-			let myForm = new FormData();
-
-			myForm.append('data_type', 'upload_files');
-			myForm.append('folder_id', FOLDER_ID);
-
-			for (let i = 0; i < files.length; i++) {
-				myForm.append('file' + i, files[i]);
-			}
-
-			upload.resetProgress();
-			document.querySelector(".js-prog-holder").classList.remove("hide");
-
-			let xhr = new XMLHttpRequest();
-
-			xhr.addEventListener('error', (e) => {
-				alert("An error occured! Please check yout internet connection!");
-			});
-
-			xhr.upload.addEventListener('progress', (e) => {
-				let percent = Math.round((e.loaded / e.total) * 100);
-				document.querySelector(".js-prog").style.width = percent + "%";
-				document.querySelector(".js-prog-text").innerHTML = percent + "%";
-
-				if (upload.cancelled) {
-					xhr.abort();
-					alert("Your upload is canceled!");
-					upload.resetProgress();
-				}
-			});
-
-			xhr.addEventListener('readystatechange', () => {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						upload.resetProgress();
-						let obj = JSON.parse(xhr.responseText);
-						if (obj.succes) {
-							alert("Upload complete!");
-							table.refresh();
-						} else {
-							alert("Could not complete file upload!");
-						}
-						upload.resetProgress();
-					} else {
-						console.log(xhr.responseText);
-						alert("An error occured! Please try again later!");
-					}
-					upload.uploading = false;
-				}
-			});
-
-			xhr.open('post', 'api.php', true);
-			xhr.send(myForm);
-		},
-
-		drop: (e) => {
-			e.preventDefault();
-			upload.dropZone.removeHighlight();
-			console.log(e.dataTransfer.files);
-			upload.send(e.dataTransfer.files);
-		},
-
-		dragOver: (e) => {
-			e.preventDefault();
-			upload.dropZone.highlight();
-		},
-
-		dropZone: {
-			highlight: () => {
-				document.querySelector('.drop-zone').classList.add('drop-zone-highlight');
-			},
-			removeHighlight: () => {
-				document.querySelector('.drop-zone').classList.remove('drop-zone-highlight');
-			}
-		}
-	};
-
-	let fileInfo = {
-
-		show: (id) => {
-
-			let row = ROWS[id];
-			document.querySelector('.js-info-no-file').classList.add('hide');
-			let fileInfoPanel = document.querySelector('.js-file-info');
-			fileInfoPanel.classList.remove('hide');
-			fileInfoPanel.querySelector('#file').innerHTML = row.file_name;
-			fileInfoPanel.querySelector('#size').innerHTML = row.file_size;
-			fileInfoPanel.querySelector('#type').innerHTML = row.file_type;
-			fileInfoPanel.querySelector('#dateModified').innerHTML = row.date_updated;
-			fileInfoPanel.querySelector('#dateAdded').innerHTML = row.date_created;
-		},
-
-		hide: () => {
-			document.querySelector('.js-info-no-file').classList.remove('hide');
-			document.querySelector('.js-file-info').classList.add('hide');
-		}
-	};
-
-	const action = {
-
-		uploading: false,
-
-		newFolder: () => {
-			let box = document.querySelector(".new-folder");
-			let text = box.querySelector("input").value.trim();
-			box.classList.add("hide");
-
-			let obj = {};
-			obj.data_type = "new_folder";
-			obj.name = text;
-			obj.folder_id = FOLDER_ID;
-
-			action.send(obj);
-		},
-
-		showNewFolder: () => {
-
-			let box = document.querySelector(".new-folder");
-			box.classList.remove("hide");
-			box.querySelector("input").value = "";
-			box.querySelector("input").focus();
-		},
-
-		hideNewFolder: () => document.querySelector(".new-folder").classList.add("hide"),
-
-		send: (obj) => {
-
-			if (action.uploading) {
-				alert("Please wait for the previous upload to finish!");
-				return;
-			}
-			action.uploading = true;
-			let myForm = new FormData();
-
-			for (key in obj) {
-				myForm.append(key, obj[key]);
-			}
-
-			let xhr = new XMLHttpRequest();
-
-			xhr.addEventListener('error', (e) => {
-				alert("An error occured! Please check yout internet connection!");
-			});
-
-			xhr.addEventListener('readystatechange', () => {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						action.handleResult(xhr.responseText);
-
-					} else {
-						console.log(xhr.responseText);
-						alert("An error occured! Please try again later!");
-					}
-					action.uploading = false;
-				}
-			});
-
-			xhr.open('post', 'api.php', true);
-			xhr.send(myForm);
-
-			table.refresh();
-		},
-
-		handleResult: (result) => {
-
-			alert(result);
-
-			let obj = JSON.parse(result);
-
-			if (obj.succes) {
-				table.refresh();
-			} else {
-				alert("Could not complete operation!");
-			}
-
-			alert(result);
-		}
-
-	};
-
-	table.refresh('');
-	window.addEventListener('click', submenu.hide);
-</script>
+<script src="script.js"></script>

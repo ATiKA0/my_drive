@@ -13,7 +13,7 @@ if (!$info['LOGGED_IN'] && ($info['data_type'] != 'user_signup' && $info['data_t
 }
 
 $info['username'] = $_SESSION['USER']['username'] ?? 'User';
-$info['drive_occupied'] = getDriveSpace($_SESSION['USER']['id']) ?? "User";
+$info['drive_occupied'] = getDriveSpace($_SESSION['USER']['id'] ?? 'User');
 $info['drive_total'] = 10;
 $info['breadcrumbs'] = [];
 
@@ -75,12 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             while ($has_parent && $num < 100) {
                 $query = "SELECT * FROM folders WHERE id = '$myfolder_id' LIMIT 1";
                 $row = query($query);
-                if($row){
+                if ($row) {
                     $info['breadcrumbs'][] = $row[0];
-                    if($row[0]['parent'] == 0){
+                    if ($row[0]['parent'] == 0) {
                         $has_parent = false;
-                    }else{
-                        $myfolder_id = $row[0]['parent']; 
+                    } else {
+                        $myfolder_id = $row[0]['parent'];
                     }
                 }
                 $num++;
@@ -164,12 +164,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             $file_type = addslashes($_POST['file_type']);
             $user_id = $_SESSION['USER']['id'];
 
-            if($file_type == "folder"){
+            if ($file_type == "folder") {
                 $query = "DELETE FROM folders WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
-            }else{
+            } else {
                 $query = "DELETE FROM mydrive WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
             }
-            $info['query'] = $query;            
+            $info['query'] = $query;
             query($query);
 
             $info['succes'] = true;

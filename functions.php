@@ -65,6 +65,11 @@ function isLoggedIn()
 
 function getDriveSpace($userId)
 {
+
+    if ($userId == 'User') {
+        return 0;
+    }
+
     $query = "SELECT SUM(file_size) AS sum FROM mydrive WHERE user_id = '$userId'";
     $row = query($query);
     if ($row) {
