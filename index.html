@@ -182,31 +182,30 @@
         <!--modals-->
         <!--sub menu-->
         <div id="submenu" class="class_45 hide" style="position: absolute">
-            <div onclick="table.downloadFile()" class="class_46">
+            <div id="submenu-download" onclick="table.downloadFile()" class="class_46">
                 <i class="bi bi-cloud-download-fill class_17"> </i>
                 <div class="class_9">Download</div>
             </div>
-            <div class="class_46">
+            <div id="submenu-edit" class="class_46">
                 <i class="bi bi-pencil-square class_17"> </i>
                 <div class="class_9">Edit</div>
             </div>
-            <div class="class_46">
+            <div id="submenu-move" class="class_46">
                 <i class="bi bi-folder-x class_17"> </i>
                 <div class="class_9">Move</div>
             </div>
-            <div onclick="table.deleteRow()" class="class_46">
+            <div id="submenu-delete" onclick="table.deleteRow()" class="class_46">
                 <i class="bi bi-trash3-fill class_17"> </i>
                 <div class="class_9">Delete</div>
             </div>
-            <div class="class_46">
+            <div id="submenu-share" class="class_46">
                 <i class="bi bi-share-fill class_17"> </i>
                 <div class="class_9">Share</div>
             </div>
-            <div class="class_46">
+            <div id="submenu-favorite" onclick="table.addToFavorite()" class="class_46">
                 <i class="bi bi-star-fill class_17"> </i>
-                <div class="class_9">
+                <div class="js-favorite-text class_9">
                     Add to favorites
-                    <br />
                 </div>
             </div>
         </div>

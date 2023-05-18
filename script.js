@@ -28,7 +28,30 @@ const submenu = {
 
         let menu = document.getElementById("submenu");
         menu.style.left = e.clientX + "px";
-        menu.style.top = e.clientY + "px";
+        menu.style.top = e.clientY + window.scrollY + "px";
+        let id = table.selected.getAttribute("id").replace("tr_", "");
+
+        //if it a folder remove buttons what can't be used
+        if (ROWS[id].file_type == "folder") {
+            document.querySelector("#submenu-favorite").classList.add("hide");
+            document.querySelector("#submenu-download").classList.add("hide");
+        } else {
+            document
+                .querySelector("#submenu-favorite")
+                .classList.remove("hide");
+            document
+                .querySelector("#submenu-download")
+                .classList.remove("hide");
+        }
+
+        //change favorite button text depends on favorite status
+        if (ROWS[id].favorite == 1)
+            document.querySelector("#submenu .js-favorite-text").innerHTML =
+                "Remove from favorites";
+        else
+            document.querySelector("#submenu .js-favorite-text").innerHTML =
+                "Add to favorites";
+
         menu.classList.remove("hide");
     },
     hide: () => {
@@ -146,8 +169,8 @@ const table = {
                         crumbs.innerHTML += `<div class=${className} onclick="table.changeFolderById(${obj.breadcrumbs[i].id})">${obj.breadcrumbs[i].name}</div>`;
                     }
 
+                    //update drive space
                     if (obj.succes && obj.data_type == "get_files") {
-                        //update drive space
                         let driveOccupied = (
                             obj.drive_occupied /
                             (1024 * 1024 * 1024)
@@ -180,10 +203,13 @@ const table = {
                                 tr.setAttribute("folder_id", obj.rows[i].id);
 
                             // set favorite star
-                            let star = '<i class="bi bi-star class_34">';
-                            if (obj.rows[i].favorite == 1)
-                                star = '<i class="bi bi-star-fill class_34">';
-
+                            let star = "";
+                            if (obj.rows[i].file_type != "folder") {
+                                star = '<i class="bi bi-star class_34">';
+                                if (obj.rows[i].favorite == 1)
+                                    star =
+                                        '<i class="bi bi-star-fill class_34">';
+                            }
                             //remove download button from list when folder
                             let downloadLink = "";
                             if (obj.rows[i].file_type != "folder") {
@@ -242,6 +268,16 @@ const table = {
     downloadFile: () => {
         let id = table.selected.getAttribute("id").replace("tr_", "");
         window.location.href = "download.php?id=" + ROWS[id].id;
+    },
+
+    addToFavorite: () => {
+        let id = table.selected.getAttribute("id").replace("tr_", "");
+        let obj = {};
+
+        obj.id = ROWS[id].id;
+        obj.data_type = "add_to_favorites";
+
+        action.send(obj);
     },
 
     logout: () => {
@@ -443,22 +479,17 @@ const action = {
 
         xhr.open("post", "api.php", true);
         xhr.send(myForm);
-
-        table.refresh();
     },
 
     handleResult: (result) => {
-        alert(result);
-
         let obj = JSON.parse(result);
 
         if (obj.succes) {
-            table.refresh();
+            if (obj.data_type == "delete_row") mode.set("TRASH");
+            else table.refresh();
         } else {
             alert("Could not complete operation!");
         }
-
-        alert(result);
     },
 };
 

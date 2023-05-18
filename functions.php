@@ -48,6 +48,20 @@ function query($query)
 
     return false;
 }
+function query_row($query)
+{
+
+    global $con;
+
+    $result = mysqli_query($con, $query);
+    if ($result) {
+        if (!is_bool($result) && mysqli_num_rows($result) > 0) {
+            return mysqli_fetch_assoc($result);
+        }
+    }
+
+    return false;
+}
 
 function get_date($date)
 {
