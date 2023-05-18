@@ -3,19 +3,19 @@ session_start();
 require 'functions.php';
 
 $info = [];
-$info['data_type'] = $_POST['data_type'] ?? '';
-$info['succes'] = false;
-$info['LOGGED_IN'] = isLoggedIn();
+$info['data_type'] =    $_POST['data_type'] ?? '';
+$info['succes'] =       false;
+$info['LOGGED_IN'] =    isLoggedIn();
 
 if (!$info['LOGGED_IN'] && ($info['data_type'] != 'user_signup' && $info['data_type'] != 'user_login')) {
     echo json_encode($info);
     die;
 }
 
-$info['username'] = $_SESSION['USER']['username'] ?? 'User';
-$info['drive_occupied'] = getDriveSpace($_SESSION['USER']['id'] ?? 'User');
-$info['drive_total'] = 10;
-$info['breadcrumbs'] = [];
+$info['username'] =         $_SESSION['USER']['username'] ?? 'User';
+$info['drive_occupied'] =   getDriveSpace($_SESSION['USER']['id'] ?? 'User');
+$info['drive_total'] =      10;
+$info['breadcrumbs'] =      [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 

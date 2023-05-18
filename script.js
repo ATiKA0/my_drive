@@ -18,9 +18,7 @@ let mode = {
 
         table.refresh(mode.current);
     },
-
 };
-
 
 const submenu = {
     show: (e) => {
@@ -130,7 +128,8 @@ const table = {
                     //display username
                     if (!USERNAME) {
                         USERNAME = obj.username;
-                        document.querySelector(".username").innerHTML = obj.username;
+                        document.querySelector(".username").innerHTML =
+                            obj.username;
                     }
 
                     //check user logged in
@@ -185,6 +184,15 @@ const table = {
                             if (obj.rows[i].favorite == 1)
                                 star = '<i class="bi bi-star-fill class_34">';
 
+                            //remove download button from list when folder
+                            let downloadLink = "";
+                            if (obj.rows[i].file_type != "folder") {
+                                downloadLink = `
+                                <a href="download.php?id=${obj.rows[i].id}">
+                                    <i class="bi bi-cloud-download-fill class_34"></i>
+                                </a>`;
+                            }
+
                             tr.innerHTML = `
 									<td>${obj.rows[i].icon}</td>
 									<td style="max-width:200px">${obj.rows[i].file_name}</td>
@@ -193,8 +201,10 @@ const table = {
 									<td>${obj.rows[i].date_created}</td>
 									<td>${obj.rows[i].date_updated}</td>
 									<td>${obj.rows[i].file_size}</td>
-									<td><i class="bi bi-cloud-download-fill class_34"></i></td>
-								`;
+									<td>
+                                        ${downloadLink}
+                                    </td>`;
+
                             tbody.appendChild(tr);
                         }
                     } else {
@@ -207,7 +217,6 @@ const table = {
 
         xhr.open("post", "api.php", true);
         xhr.send(myForm);
-        //recreate table
     },
 
     deleteRow: () => {
@@ -230,6 +239,11 @@ const table = {
         action.send(obj);
     },
 
+    downloadFile: () => {
+        let id = table.selected.getAttribute("id").replace("tr_", "");
+        window.location.href = "download.php?id=" + ROWS[id].id;
+    },
+
     logout: () => {
         let myForm = new FormData();
 
@@ -247,7 +261,6 @@ const table = {
 
         xhr.open("post", "api.php", true);
         xhr.send(myForm);
-        //recreate table
     },
 };
 
@@ -340,7 +353,9 @@ const upload = {
 
     dropZone: {
         highlight: () => {
-            document.querySelector(".drop-zone").classList.add("drop-zone-highlight");
+            document
+                .querySelector(".drop-zone")
+                .classList.add("drop-zone-highlight");
         },
         removeHighlight: () => {
             document
@@ -359,7 +374,8 @@ let fileInfo = {
         fileInfoPanel.querySelector("#file").innerHTML = row.file_name;
         fileInfoPanel.querySelector("#size").innerHTML = row.file_size;
         fileInfoPanel.querySelector("#type").innerHTML = row.file_type;
-        fileInfoPanel.querySelector("#dateModified").innerHTML = row.date_updated;
+        fileInfoPanel.querySelector("#dateModified").innerHTML =
+            row.date_updated;
         fileInfoPanel.querySelector("#dateAdded").innerHTML = row.date_created;
     },
 
