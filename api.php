@@ -41,9 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $user_id = $_SESSION['USER']['id'] ?? 0;
                 $fileSize = $file['size'];
                 $folder_id = $_POST['folder_id'] ?? 0;
+                $slug = generateSlug();
 
-                $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated, folder_id) 
-            values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated', '$folder_id')";
+                $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated, folder_id, slug) 
+            values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated', '$folder_id', '$slug')";
                 query($query);
                 $info['succes'] = true;
             }
@@ -108,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
             switch ($mode) {
                 case 'MY DRIVE':
-                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' && trash = 0 ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && folder_id = '$folder_id' && trash = 0 ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' && trash = 0 || share_mode = 2 ORDER BY id DESC LIMIT 30";
+                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && folder_id = '$folder_id' && trash = 0 || share_mode = 2 ORDER BY id DESC LIMIT 30";
                     break;
 
                 case 'FAVORITES':
@@ -128,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     break;
 
                 default:
-                    $queryFolder = "SELECT * FROM folders WHERE trash = 0 && user_id = '$user_id' && parent = '$folder_id' ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE trash = 0 && user_id = '$user_id' && folder_id = '$folder_id' ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE trash = 0 && user_id = '$user_id' && parent = '$folder_id' || share_mode = 2 ORDER BY id DESC LIMIT 30";
+                    $query = "SELECT * FROM mydrive WHERE trash = 0 && user_id = '$user_id' && folder_id = '$folder_id' || share_mode = 2 ORDER BY id DESC LIMIT 30";
                     break;
             }
             if (!empty($queryFolder))
@@ -174,8 +175,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     if ($rows[$key]['file_size'] == '0 Mb') {
                         $rows[$key]['file_size'] = round($row['file_size'] / 1024) . " Kb";
                     }
+                    if (array_key_exists($rows[$key]['file_type'], $formated_file_type)) {
+                        $rows[$key]['file_type'] = $formated_file_type[$rows[$key]['file_type']];
+                    }
                 }
                 $info['rows'] = $rows;
+                $info['succes'] = true;
+            }
+            break;
+
+        case ('preview_file'):
+
+            //delete from database
+            $slug = addslashes($_POST['slug']);
+            $user_id = $_SESSION['USER']['id'];
+
+            $info['row'] = $row = query_row("SELECT * FROM mydrive WHERE slug = '$slug' && user_id = '$user_id'");
+
+            if (!empty($row)) {
+
+                $parts = explode(".", $row['file_name']);
+                $ext = strtolower(end($parts));
+                $row['icon'] = getIcon($row['file_type'], $ext);
+                $row['date_created'] = get_date($row['date_created']);
+                $row['date_updated'] = get_date($row['date_updated']);
+                if ($row['file_size'] < 1000000) {
+                    $row['file_size'] = round($row['file_size'] / 1024) . " Kb";
+                } else
+                    $row['file_size'] = round($row['file_size'] / (1024 * 1024)) . " Mb";
+                if (array_key_exists($row['file_type'], $formated_file_type)) {
+                    $row['file_type'] = $formated_file_type[$row['file_type']];
+                }
+
+                $info['row'] = $row;
                 $info['succes'] = true;
             }
             break;
@@ -219,6 +251,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                         unlink($row['file_path']);
                     }
                 }
+            }
+            query($query);
+
+            $info['succes'] = true;
+
+            break;
+
+        case ('restore_row'):
+
+            //restore from trash
+            $id = addslashes($_POST['id']);
+            $file_type = addslashes($_POST['file_type']);
+            $user_id = $_SESSION['USER']['id'];
+
+            if ($file_type == "folder") {
+                $query = "UPDATE folders SET trash = 0 WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
+            } else {
+                $query = "UPDATE mydrive SET trash = 0 WHERE id = '$id' && user_id = '$user_id' LIMIT 1";
             }
             query($query);
 

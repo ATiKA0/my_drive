@@ -25,8 +25,12 @@ function getIcon($type, $ext = null)
     if (!array_key_exists($type, $icons))
         return $icons['undefined'];
 
-    if ($type == 'application/octet-stream')
-        return $icons[$type][$ext];
+    if ($type == 'application/octet-stream') {
+        if (!array_key_exists($ext, $icons[$type]))
+            return $icons['undefined'];
+        else
+            return $icons[$type][$ext];
+    }
 
     return $icons[$type];
 };
@@ -92,3 +96,37 @@ function getDriveSpace($userId)
 
     return 0;
 }
+
+function generateSlug()
+{
+    $str = "";
+
+    $a = range(0, 9);
+    $b = range('a', 'z');
+    $c = range('A', 'Z');
+
+    $array = array_merge($a, $b, $c);
+    $array[] = '_';
+    $array[] = '-';
+
+    $lenght = count($array) - 1;
+
+    for ($i = 0; $i < rand(5, 50); $i++) {
+        $key = rand(0, $lenght);
+        $str .= $array[$key];
+    }
+
+    return $str;
+}
+
+$formated_file_type = [
+    'image/png' => 'Image',
+    'image/jpeg' => 'Image',
+    'image/svg' => 'Image',
+    'text/plain' => 'Plain Text',
+    'application/vnd.openxmlformats-officedocument.word' => 'Word document',
+    'video/mp4' => 'MP4 Video',
+    'video/x-matroska' => 'MKV Video',
+    'audio/mp3' => 'MP3 Audio',
+    'application/pdf' => 'PDF Document',
+];

@@ -35,12 +35,16 @@ const submenu = {
         if (ROWS[id].file_type == "folder") {
             document.querySelector("#submenu-favorite").classList.add("hide");
             document.querySelector("#submenu-download").classList.add("hide");
+            document.querySelector("#submenu-preview").classList.add("hide");
         } else {
             document
                 .querySelector("#submenu-favorite")
                 .classList.remove("hide");
             document
                 .querySelector("#submenu-download")
+                .classList.remove("hide");
+            document
+                .querySelector("#submenu-preview")
                 .classList.remove("hide");
         }
 
@@ -51,6 +55,11 @@ const submenu = {
         else
             document.querySelector("#submenu .js-favorite-text").innerHTML =
                 "Add to favorites";
+
+        //hide the restore when not in trash folder
+        if (mode.current == "TRASH")
+            document.querySelector("#submenu-restore").classList.remove("hide");
+        else document.querySelector("#submenu-restore").classList.add("hide");
 
         menu.classList.remove("hide");
     },
@@ -198,7 +207,7 @@ const table = {
                                 tr.setAttribute("type", "file");
                             }
 
-                            //set folder_id attribute when this is  a folder
+                            //add folder_id attribute when this is  a folder
                             if (obj.rows[i].file_type == "folder")
                                 tr.setAttribute("folder_id", obj.rows[i].id);
 
@@ -219,12 +228,24 @@ const table = {
                                 </a>`;
                             }
 
+                            //set share mode icon depends on the share mode
+                            let shareModeIcon = `<i title = "Not shared" class="bi bi-person-x-fill class_34"></i>`;
+                            if (obj.rows[i].share_mode == 1) {
+                                shareModeIcon = `
+                                    <i title = "Shared whit specific users" class="bi bi-people-fill class_34"></i>
+                                </a>`;
+                            }else if(obj.rows[i].share_mode == 2){
+                                shareModeIcon = `
+                                    <i title = "Shared public" class="bi bi-globe class_34"></i>
+                                </a>`;
+                            }
+
                             tr.innerHTML = `
 									<td>${obj.rows[i].icon}</td>
-									<td style="max-width:200px">${obj.rows[i].file_name}</td>
+									<td style="max-width:17em">${obj.rows[i].file_name}</td>
 									<td>${star}</td>
 									<td>${obj.rows[i].file_type}</td>
-									<td>${obj.rows[i].date_created}</td>
+									<td style="max-width:5em">${shareModeIcon}</td>
 									<td>${obj.rows[i].date_updated}</td>
 									<td>${obj.rows[i].file_size}</td>
 									<td>
@@ -263,6 +284,31 @@ const table = {
         obj.id = ROWS[id].id;
 
         action.send(obj);
+    },
+
+    restoreRow: ()=>{
+        if (!table.selected) {
+            alert("Please select a row to restore!");
+            return;
+        }
+
+        if (!confirm("Are you sure want to restore the item?")) {
+            return;
+        }
+
+        let obj = {};
+
+        obj.data_type = "restore_row";
+        obj.file_type = table.selected.getAttribute("type");
+        let id = table.selected.getAttribute("id").replace("tr_", "");
+        obj.id = ROWS[id].id;
+
+        action.send(obj);
+    },
+
+    previewFile: ()=>{
+        let id = table.selected.getAttribute("id").replace("tr_", "");
+        window.open('preview.html?id='+ROWS[id].slug, '_blank');
     },
 
     downloadFile: () => {
@@ -485,8 +531,7 @@ const action = {
         let obj = JSON.parse(result);
 
         if (obj.succes) {
-            if (obj.data_type == "delete_row") mode.set("TRASH");
-            else table.refresh();
+            table.refresh(mode.current);
         } else {
             alert("Could not complete operation!");
         }
