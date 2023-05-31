@@ -6,8 +6,9 @@ $info = [];
 $info['data_type'] =    $_POST['data_type'] ?? '';
 $info['succes'] =       false;
 $info['LOGGED_IN'] =    isLoggedIn();
+$works_without_login = ['user_signup', 'user_login', 'preview_file'];
 
-if (!$info['LOGGED_IN'] && ($info['data_type'] != 'user_signup' && $info['data_type'] != 'user_login')) {
+if (!$info['LOGGED_IN'] && (!in_array($info['data_type'], $works_without_login))) {
     echo json_encode($info);
     die;
 }
@@ -79,6 +80,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $query = "UPDATE mydrive SET favorite = '$favorite' WHERE user_id = '$user_id' && id = '$id' LIMIT 1";
                 query($query);
             }
+            $info['succes'] = true;
+
+            break;
+
+        case ('share_file'):
+
+            //check if item is already favorite
+            $id = addslashes($_POST['id'] ?? 0);
+            $share_mode = addslashes($_POST['share_mode'] ?? 0);
+            $user_id = $_SESSION['USER']['id'] ?? 0;
+
+            $query = "UPDATE mydrive SET share_mode = '$share_mode' WHERE user_id = '$user_id' && id = '$id' LIMIT 1";
+            query($query);
+
             $info['succes'] = true;
 
             break;
@@ -188,11 +203,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
             //delete from database
             $slug = addslashes($_POST['slug']);
-            $user_id = $_SESSION['USER']['id'];
+            $user_id = $_SESSION['USER']['id'] ?? 0;
 
-            $info['row'] = $row = query_row("SELECT * FROM mydrive WHERE slug = '$slug' && user_id = '$user_id'");
+            $info['row'] = $row = query_row("SELECT * FROM mydrive WHERE slug = '$slug'");
 
             if (!empty($row)) {
+
 
                 $parts = explode(".", $row['file_name']);
                 $ext = strtolower(end($parts));
@@ -206,9 +222,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 if (array_key_exists($row['file_type'], $formated_file_type)) {
                     $row['file_type'] = $formated_file_type[$row['file_type']];
                 }
-
                 $info['row'] = $row;
                 $info['succes'] = true;
+
+                //check file acces
+                switch ($row['share_mode']) {
+                    case 0:
+                        //private file
+                        if ($row['user_id'] !== $user_id) {
+                            $info['row'] = false;
+                            $info['succes'] = false;
+                        }
+                        break;
+                    case 1:
+                        //shared to specific
+
+                        break;
+                    case 2:
+                        //shared to public
+                        break;
+
+                    default:
+                        $info['row'] = false;
+                        $info['succes'] = false;
+                        break;
+                }
             }
             break;
 

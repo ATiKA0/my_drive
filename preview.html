@@ -4,10 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>my drive preview page</title>
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="assets/css/bootstrap-icons.css" />
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.css" />
         <link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
     </head>
 
@@ -36,9 +33,7 @@
             </div>
         </div>
         <div class="class_28">
-            <table
-                oncontextmenu="submenu.show(event)"
-                class="item_class_0 class_29">
+            <table oncontextmenu="submenu.show(event)" class="item_class_0 class_29">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -55,8 +50,7 @@
                 <tbody id="table-body"></tbody>
             </table>
         </div>
-        <div class="js-preview-card" style="padding: 10px; text-align: center">
-        </div>
+        <div class="js-preview-card" style="padding: 10px; text-align: center"></div>
     </body>
 </html>
 
@@ -76,9 +70,7 @@
 
             obj.data_type = "preview_file";
             obj.slug =
-                typeof getUrlParam()["id"] === "undefined"
-                    ? ""
-                    : getUrlParam()["id"];
+                typeof getUrlParam()["id"] === "undefined" ? "" : getUrlParam()["id"];
             action.send(obj);
         },
 
@@ -97,9 +89,7 @@
             let xhr = new XMLHttpRequest();
 
             xhr.onerror = (e) => {
-                alert(
-                    "An error occured! Please check yout internet connection!"
-                );
+                alert("An error occured! Please check yout internet connection!");
             };
 
             xhr.onreadystatechange = () => {
@@ -139,8 +129,7 @@
                 // set favorite star
                 let star = "";
                 star = '<i class="bi bi-star class_34">';
-                if (obj.row.favorite == 1)
-                    star = '<i class="bi bi-star-fill class_34">';
+                if (obj.row.favorite == 1) star = '<i class="bi bi-star-fill class_34">';
 
                 //add download button
                 let downloadLink = "";
@@ -163,7 +152,6 @@
                 tbody.appendChild(tr);
 
                 //display preview if possible
-
                 let previewable = ["Image", "MP4 Video", "MP3 Audio"];
                 if (previewable.includes(obj.row.file_type)) {
                     let display = "";
@@ -189,16 +177,16 @@
                             break;
 
                         default:
-                        display = '<i class="bi bi-eye"></i> Preview unavailable';
+                            display = '<i class="bi bi-eye"></i> Preview unavailable';
                             break;
                     }
 
-                    document.querySelector(".js-preview-card").innerHTML =
-                        display;
+                    document.querySelector(".js-preview-card").innerHTML = display;
                 }
             } else {
                 tbody.innerHTML =
                     "<tr><td colspan = '10' style ='text-align:center'>No files found!</td></tr>";
+                window.location = "login.html";
             }
         },
     };

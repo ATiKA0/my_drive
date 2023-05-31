@@ -37,15 +37,9 @@ const submenu = {
             document.querySelector("#submenu-download").classList.add("hide");
             document.querySelector("#submenu-preview").classList.add("hide");
         } else {
-            document
-                .querySelector("#submenu-favorite")
-                .classList.remove("hide");
-            document
-                .querySelector("#submenu-download")
-                .classList.remove("hide");
-            document
-                .querySelector("#submenu-preview")
-                .classList.remove("hide");
+            document.querySelector("#submenu-favorite").classList.remove("hide");
+            document.querySelector("#submenu-download").classList.remove("hide");
+            document.querySelector("#submenu-preview").classList.remove("hide");
         }
 
         //change favorite button text depends on favorite status
@@ -160,8 +154,7 @@ const table = {
                     //display username
                     if (!USERNAME) {
                         USERNAME = obj.username;
-                        document.querySelector(".username").innerHTML =
-                            obj.username;
+                        document.querySelector(".username").innerHTML = obj.username;
                     }
 
                     //check user logged in
@@ -216,8 +209,7 @@ const table = {
                             if (obj.rows[i].file_type != "folder") {
                                 star = '<i class="bi bi-star class_34">';
                                 if (obj.rows[i].favorite == 1)
-                                    star =
-                                        '<i class="bi bi-star-fill class_34">';
+                                    star = '<i class="bi bi-star-fill class_34">';
                             }
                             //remove download button from list when folder
                             let downloadLink = "";
@@ -234,7 +226,7 @@ const table = {
                                 shareModeIcon = `
                                     <i title = "Shared whit specific users" class="bi bi-people-fill class_34"></i>
                                 </a>`;
-                            }else if(obj.rows[i].share_mode == 2){
+                            } else if (obj.rows[i].share_mode == 2) {
                                 shareModeIcon = `
                                     <i title = "Shared public" class="bi bi-globe class_34"></i>
                                 </a>`;
@@ -286,7 +278,7 @@ const table = {
         action.send(obj);
     },
 
-    restoreRow: ()=>{
+    restoreRow: () => {
         if (!table.selected) {
             alert("Please select a row to restore!");
             return;
@@ -306,9 +298,9 @@ const table = {
         action.send(obj);
     },
 
-    previewFile: ()=>{
+    previewFile: () => {
         let id = table.selected.getAttribute("id").replace("tr_", "");
-        window.open('preview.html?id='+ROWS[id].slug, '_blank');
+        window.open("preview.html?id=" + ROWS[id].slug, "_blank");
     },
 
     downloadFile: () => {
@@ -435,14 +427,10 @@ const upload = {
 
     dropZone: {
         highlight: () => {
-            document
-                .querySelector(".drop-zone")
-                .classList.add("drop-zone-highlight");
+            document.querySelector(".drop-zone").classList.add("drop-zone-highlight");
         },
         removeHighlight: () => {
-            document
-                .querySelector(".drop-zone")
-                .classList.remove("drop-zone-highlight");
+            document.querySelector(".drop-zone").classList.remove("drop-zone-highlight");
         },
     },
 };
@@ -456,8 +444,7 @@ let fileInfo = {
         fileInfoPanel.querySelector("#file").innerHTML = row.file_name;
         fileInfoPanel.querySelector("#size").innerHTML = row.file_size;
         fileInfoPanel.querySelector("#type").innerHTML = row.file_type;
-        fileInfoPanel.querySelector("#dateModified").innerHTML =
-            row.date_updated;
+        fileInfoPanel.querySelector("#dateModified").innerHTML = row.date_updated;
         fileInfoPanel.querySelector("#dateAdded").innerHTML = row.date_created;
     },
 
@@ -469,6 +456,7 @@ let fileInfo = {
 
 const action = {
     uploading: false,
+    rootPath: "http://localhost/my_drive/",
 
     newFolder: () => {
         let box = document.querySelector(".new-folder");
@@ -490,8 +478,41 @@ const action = {
         box.querySelector("input").focus();
     },
 
-    hideNewFolder: () =>
-        document.querySelector(".new-folder").classList.add("hide"),
+    hideNewFolder: () => document.querySelector(".new-folder").classList.add("hide"),
+
+    showShareFile: () => {
+        //get selected file info
+        let id = table.selected.getAttribute("id").replace("tr_", "");
+
+        //show the share box and data
+        let box = document.querySelector(".js-share");
+        box.classList.remove("hide");
+        box.querySelector(".js-share-filename").innerHTML = ROWS[id].file_name;
+        box.querySelector(".js-share-input").value =
+            action.rootPath + "preview.html?id=" + ROWS[id].slug;
+        box.querySelector(".js-share-input").focus();
+        box.querySelector(".js-sharemode-" + ROWS[id].share_mode).checked = true;
+    },
+
+    shareFile: () => {
+        let box = document.querySelector(".js-share");
+        let radios = box.querySelectorAll(".radio");
+        let shareMode = 0;
+
+        radios.forEach((element) => {
+            if (element.checked) shareMode = element.value;
+        });
+
+        box.classList.add("hide");
+
+        let obj = {};
+        obj.id = ROWS[table.selected.getAttribute("id").replace("tr_", "")].id;
+        obj.data_type = "share_file";
+        obj.share_mode = shareMode;
+        obj.folder_id = FOLDER_ID;
+
+        action.send(obj);
+    },
 
     send: (obj) => {
         if (action.uploading) {

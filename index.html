@@ -4,10 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>my drive main page</title>
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="assets/css/bootstrap-icons.css" />
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-icons.css" />
         <link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
     </head>
 
@@ -52,10 +49,7 @@
                     <i class="bi bi-cloud-arrow-up-fill class_17"> </i>
                     <div class="class_9">My Drive</div>
                 </div>
-                <div
-                    id="FAVORITES"
-                    onclick="mode.set(this.id)"
-                    class="class_18">
+                <div id="FAVORITES" onclick="mode.set(this.id)" class="class_18">
                     <i class="bi bi-star-fill class_17"> </i>
                     <div class="class_9">Favorites</div>
                 </div>
@@ -162,9 +156,7 @@
                             <div class="js-prog class_15"></div>
                         </div>
                         <div class="js-prog-text class_9">50%</div>
-                        <button onclick="upload.cancel()" class="class_42">
-                            Abort
-                        </button>
+                        <button onclick="upload.cancel()" class="class_42">Abort</button>
                     </div>
                 </label>
             </div>
@@ -172,17 +164,11 @@
         <!--modals-->
         <!--sub menu-->
         <div id="submenu" class="class_45 hide" style="position: absolute">
-            <div
-                id="submenu-preview"
-                onclick="table.previewFile()"
-                class="class_46">
+            <div id="submenu-preview" onclick="table.previewFile()" class="class_46">
                 <i class="bi bi-eye class_17"> </i>
                 <div class="class_9">Preview</div>
             </div>
-            <div
-                id="submenu-download"
-                onclick="table.downloadFile()"
-                class="class_46">
+            <div id="submenu-download" onclick="table.downloadFile()" class="class_46">
                 <i class="bi bi-cloud-download-fill class_17"> </i>
                 <div class="class_9">Download</div>
             </div>
@@ -194,28 +180,19 @@
                 <i class="bi bi-folder-x class_17"> </i>
                 <div class="class_9">Move</div>
             </div>
-            <div
-                id="submenu-delete"
-                onclick="table.deleteRow()"
-                class="class_46">
+            <div id="submenu-delete" onclick="table.deleteRow()" class="class_46">
                 <i class="bi bi-trash3-fill class_17"> </i>
                 <div class="class_9">Delete</div>
             </div>
-            <div
-                id="submenu-restore"
-                onclick="table.restoreRow()"
-                class="class_46">
+            <div id="submenu-restore" onclick="table.restoreRow()" class="class_46">
                 <i class="bi bi-arrow-counterclockwise class_17"> </i>
                 <div class="class_9">Restore</div>
             </div>
-            <div id="submenu-share" class="class_46">
+            <div id="submenu-share" onclick="action.showShareFile()" class="class_46">
                 <i class="bi bi-share-fill class_17"> </i>
                 <div class="class_9">Share</div>
             </div>
-            <div
-                id="submenu-favorite"
-                onclick="table.addToFavorite()"
-                class="class_46">
+            <div id="submenu-favorite" onclick="table.addToFavorite()" class="class_46">
                 <i class="bi bi-star-fill class_17"> </i>
                 <div class="js-favorite-text class_9">Add to favorites</div>
             </div>
@@ -224,17 +201,55 @@
         <!-- start new folder-->
         <div class="new-folder hide" onclick="this.classList.add('hide')">
             <div onclick="event.stopPropagation()">
-                <button onclick="action.hideNewFolder()" class="close-button">
-                    +
-                </button>
+                <button onclick="action.hideNewFolder()" class="close-button">+</button>
                 <h3>New Folder</h3>
                 <input class="new-folder-input" type="text" />
-                <button onclick="action.newFolder(this)" class="class_42">
-                    Save
-                </button>
+                <button onclick="action.newFolder(this)" class="class_42">Save</button>
             </div>
         </div>
         <!-- end new folder-->
+        <!-- start share-->
+        <div class="js-share hide" onclick="this.classList.add('hide')">
+            <div onclick="event.stopPropagation()">
+                <button
+                    onclick="document.querySelector('.js-share').classList.add('hide')"
+                    class="close-button">
+                    +
+                </button>
+                <h3><i class="bi bi-share-fill" style="margin: 0"></i> Share mode</h3>
+                <br />
+                <label class="js-share-filename" style="padding: 0 1em 1em 1em"></label
+                ><br />
+                <div class="js-share-radio">
+                    <label>
+                        <input
+                            class="radio js-sharemode-0"
+                            type="radio"
+                            name="share"
+                            value="0" />Not Shared </label
+                    ><br />
+                    <label>
+                        <input
+                            class="radio js-sharemode-1"
+                            type="radio"
+                            name="share"
+                            value="1" />Share to specific people </label
+                    ><br />
+                    <label>
+                        <input
+                            class="radio js-sharemode-2"
+                            type="radio"
+                            name="share"
+                            value="2" />Share to public </label
+                    ><br />
+                </div>
+                <h4 style="margin-bottom: 0px">File link:</h4>
+                <br />
+                <input class="js-share-input" type="text" name="link" value="" />
+                <button onclick="action.shareFile(this)" class="class_42">Save</button>
+            </div>
+        </div>
+        <!-- end share-->
     </body>
 </html>
 
