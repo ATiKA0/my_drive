@@ -86,14 +86,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
         case ('share_file'):
 
-            //check if item is already favorite
             $id = addslashes($_POST['id'] ?? 0);
             $share_mode = addslashes($_POST['share_mode'] ?? 0);
             $user_id = $_SESSION['USER']['id'] ?? 0;
+            $emails = $_POST['emails'] ?? "[]";
 
-            $query = "UPDATE mydrive SET share_mode = '$share_mode' WHERE user_id = '$user_id' && id = '$id' LIMIT 1";
+            //decode emails
+            $emails = json_decode($emails, true);
+
+            //disable all email records
+            $query = "UPDATE shared_to SET disabled = 1 WHERE file_id = '$id'";
             query($query);
 
+            //save share mode
+            $query = "UPDATE mydrive SET share_mode = '$share_mode' WHERE user_id = '$user_id' && id = '$id' LIMIT 1";
+            query($query);
+            
+            //add new access records
+            foreach ($emails as $email) {
+                $query = "SELECT * FROM shared_to WHERE email = '$email' && file_id = '$id' LIMIT 1";
+                $row = query_row($query);
+
+                if($row){
+                    $query = "UPDATE shared_to SET disabled = 0 WHERE id = '".$row['id']."' LIMIT 1";
+                    $row = query_row($query);
+                }else{
+                    $query = "INSERT INTO shared_to (file_id, email,disabled) VALUES('$id','$email',0)";
+                    $row = query_row($query);
+                }
+            }
             $info['succes'] = true;
 
             break;
@@ -102,6 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
             $user_id = $_SESSION['USER']['id'] ?? null;
             $mode = $_POST['mode'];
+            $page_number = $_POST['page_number'] ?? 1;
+            if (empty($page) || !is_numeric($page) || $page < 1) $page = 1;
             $folder_id = $_POST['folder_id'] ?? 0;
 
             //get folder breadcrumbs
@@ -122,30 +145,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $num++;
             }
 
+            $limit = 5;
+            $offset = ($page_number - 1) * $limit;
+
             switch ($mode) {
                 case 'MY DRIVE':
-                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' && trash = 0 || share_mode = 2 ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && folder_id = '$folder_id' && trash = 0 || share_mode = 2 ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE user_id = '$user_id' && parent = '$folder_id' && trash = 0 || share_mode = 2 ORDER BY id DESC LIMIT $limit OFFSET $offset";
+                    $query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && folder_id = '$folder_id' && trash = 0 || share_mode = 2 ORDER BY id DESC LIMIT $limit OFFSET $offset";
                     break;
 
                 case 'FAVORITES':
                     $queryFolder = "";
-                    $query = "SELECT * FROM mydrive WHERE trash = 0 && favorite = 1 && user_id = '$user_id' ORDER BY id DESC LIMIT 30";
+                    $query = "SELECT * FROM mydrive WHERE trash = 0 && favorite = 1 && user_id = '$user_id' ORDER BY id DESC LIMIT $limit OFFSET $offset";
                     break;
 
                 case 'RECENT':
                     $queryFolder = "";
-                    $query = "SELECT * FROM mydrive WHERE trash = 0 && user_id = '$user_id' ORDER BY date_updated DESC LIMIT 30";
+                    $query = "SELECT * FROM mydrive WHERE trash = 0 && user_id = '$user_id' ORDER BY date_updated DESC LIMIT $limit OFFSET $offset";
                     break;
 
                 case 'TRASH':
-                    $queryFolder = "SELECT * FROM folders WHERE trash = 1 && user_id = '$user_id' ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE trash = 1 && user_id = '$user_id' ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE trash = 1 && user_id = '$user_id' ORDER BY id DESC LIMIT $limit OFFSET $offset";
+                    $query = "SELECT * FROM mydrive WHERE trash = 1 && user_id = '$user_id' ORDER BY id DESC LIMIT $limit OFFSET $offset";
                     break;
 
                 default:
-                    $queryFolder = "SELECT * FROM folders WHERE trash = 0 && user_id = '$user_id' && parent = '$folder_id' || share_mode = 2 ORDER BY id DESC LIMIT 30";
-                    $query = "SELECT * FROM mydrive WHERE trash = 0 && user_id = '$user_id' && folder_id = '$folder_id' || share_mode = 2 ORDER BY id DESC LIMIT 30";
+                    $queryFolder = "SELECT * FROM folders WHERE trash = 0 && user_id = '$user_id' && parent = '$folder_id' || share_mode = 2 ORDER BY id DESC LIMIT $limit OFFSET $offset";
+                    $query = "SELECT * FROM mydrive WHERE trash = 0 && user_id = '$user_id' && folder_id = '$folder_id' || share_mode = 2 ORDER BY id DESC LIMIT $limit OFFSET $offset";
                     break;
             }
             if (!empty($queryFolder))
@@ -177,8 +203,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
 
                         $rows[$key]['file_name'] = $row['name'];
                         $row['file_name'] = $row['name'];
-
-                        $info['van'] = true;
                     }
                     $parts = explode(".", $row['file_name']);
                     $ext = strtolower(end($parts));
@@ -186,6 +210,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     $rows[$key]['date_created'] = get_date($row['date_created']);
                     $rows[$key]['date_updated'] = get_date($row['date_updated']);
                     $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . " Mb";
+
+                    //get shared to data
+
+                    $query = "SELECT * FROM shared_to WHERE file_id = '$row[id]' && disabled = 0";
+                    $emails = query($query);
+                    $rows[$key]['emails'] = empty($emails) ? "[]" : json_encode($emails);
 
                     if ($rows[$key]['file_size'] == '0 Mb') {
                         $rows[$key]['file_size'] = round($row['file_size'] / 1024) . " Kb";

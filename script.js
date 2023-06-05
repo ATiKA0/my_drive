@@ -62,9 +62,63 @@ const submenu = {
     },
 };
 
+//File sharing
+const share = {
+    addEmail: (email) => {
+        if (email == "") {
+            alert("Type an email first");
+            document.querySelector(".js-access-email-input").focus();
+            return;
+        }
+        let holder = document.querySelector(".js-access-email-holder");
+        let div = document.createElement("div");
+        div.setAttribute("class", "access-email ");
+        div.innerHTML = `
+            <div>${email}</div>
+            <div onclick="share.removeEmail(event)">+</div>
+            <input type="hidden" value="${email}">
+        `;
+
+        holder.insertBefore(div, holder.children[0]);
+
+        document.querySelector(".js-access-email-input").focus();
+        document.querySelector(".js-access-email-input").innerHTML = "";
+    },
+
+    removeEmail: (e) => {
+        if (!confirm("Are you sure want to remove access to this email?")) return;
+        e.currentTarget.parentNode.remove();
+    },
+
+    refresh: (obj) => {
+        document.querySelector(".js-access-email-holder").innerHTML = "";
+
+        let rows = JSON.parse(obj);
+        rows.forEach((element) => {
+            share.addEmail(element.email);
+        });
+    },
+};
+
 const table = {
     selected: null,
     selected_id: null,
+    pageNumber: 1,
+
+    nextPage: () => {
+        table.pageNumber += 1;
+
+        table.refresh(mode.current, table.pageNumber);
+        document.querySelector(".js-page-number").innerHTML = "Page " + table.pageNumber;
+    },
+
+    prevPage: () => {
+        table.pageNumber -= 1;
+        if (table.pageNumber < 1) table.pageNumber = 1;
+
+        table.refresh(mode.current, table.pageNumber);
+        document.querySelector(".js-page-number").innerHTML = "Page " + table.pageNumber;
+    },
 
     select: (e, mode = "leftclick") => {
         let old_selected_id = table.selected_id;
@@ -121,7 +175,7 @@ const table = {
         }
     },
 
-    refresh: (MODE = "MY DRIVE") => {
+    refresh: (MODE = "MY DRIVE", PAGE = 1) => {
         //show a loader
         let tbody = document.querySelector("#table-body");
         tbody.innerHTML = `
@@ -138,6 +192,7 @@ const table = {
 
         myForm.append("data_type", "get_files");
         myForm.append("mode", MODE);
+        myForm.append("page_number", PAGE);
         myForm.append("folder_id", FOLDER_ID);
 
         let xhr = new XMLHttpRequest();
@@ -492,6 +547,8 @@ const action = {
             action.rootPath + "preview.html?id=" + ROWS[id].slug;
         box.querySelector(".js-share-input").focus();
         box.querySelector(".js-sharemode-" + ROWS[id].share_mode).checked = true;
+
+        share.refresh(ROWS[id].emails);
     },
 
     shareFile: () => {
@@ -505,9 +562,19 @@ const action = {
 
         box.classList.add("hide");
 
+        //grab email adresses
+        let inputs = document
+            .querySelector(".js-access-email-holder")
+            .querySelectorAll("input");
+        let emails = [];
+        inputs.forEach((element) => {
+            emails.push(element.value);
+        });
+
         let obj = {};
         obj.id = ROWS[table.selected.getAttribute("id").replace("tr_", "")].id;
         obj.data_type = "share_file";
+        obj.emails = JSON.stringify(emails);
         obj.share_mode = shareMode;
         obj.folder_id = FOLDER_ID;
 

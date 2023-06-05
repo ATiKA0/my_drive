@@ -600,3 +600,56 @@ tr {
 .js-share-radio {
     display: flex;
 }
+
+.js-page-number {
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+}
+
+/* Share with specific people email area*/
+.js-email-textarea {
+    padding: 10px;
+    border: solid thin #eee;
+    width: 100%;
+}
+
+.access-email-input {
+    display: flex;
+}
+
+.access-email-input button {
+    flex: 1;
+    max-width: 50px;
+    cursor: pointer;
+}
+
+.access-email-input input {
+    flex: 1;
+    width: 80%;
+}
+
+.access-email {
+    display: flex;
+    background-color: #eee;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    align-items: center;
+}
+
+.access-email :nth-child(1) {
+    flex: 1;
+    padding: 2px;
+    text-align: left;
+}
+
+.access-email :nth-child(2) {
+    width: 30px;
+    background-color: transparent;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    transform: rotate(45deg);
+    align-self: flex-end;
+    color: red;
+}

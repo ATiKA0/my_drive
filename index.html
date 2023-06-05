@@ -45,7 +45,7 @@
                     </div>
                     <div class="js-drive-space-text class_9">0 GB / 10 GB</div>
                 </div>
-                <div id="MY DRIVE" onclick="mode.set(this.id)" class="class_16">
+                <div id="MY DRIVE" onclick="mode.set(this.id);table.changeFolderById(0);" class="class_16">
                     <i class="bi bi-cloud-arrow-up-fill class_17"> </i>
                     <div class="class_9">My Drive</div>
                 </div>
@@ -89,9 +89,20 @@
                             onclick="table.select(event)"></tbody>
                     </table>
                 </div>
-                <div class="class_41">
-                    <button class="class_42">Prev</button>
-                    <button class="class_43">Next</button>
+                <div class="class_41" style="display: flex">
+                    <button
+                        onclick="table.prevPage()"
+                        class="class_42"
+                        style="min-width: 7em">
+                        Prev
+                    </button>
+                    <span class="js-page-number">Page 1</span>
+                    <button
+                        onclick="table.nextPage()"
+                        class="class_43"
+                        style="min-width: 7em">
+                        Next
+                    </button>
                     <div class="class_44"></div>
                 </div>
             </div>
@@ -230,19 +241,34 @@
                     ><br />
                     <label>
                         <input
-                            class="radio js-sharemode-1"
-                            type="radio"
-                            name="share"
-                            value="1" />Share to specific people </label
-                    ><br />
-                    <label>
-                        <input
                             class="radio js-sharemode-2"
                             type="radio"
                             name="share"
                             value="2" />Share to public </label
                     ><br />
+                    <label>
+                        <input
+                            class="radio js-sharemode-1"
+                            type="radio"
+                            name="share"
+                            value="1" />Share to specific people </label
+                    ><br />
                 </div>
+                <div class="js-email-textarea">
+                    <small>Type an email and click add</small><br />
+                    <div class="access-email-input">
+                        <input class ="js-access-email-input" type="text" name="" />
+                        <button onclick="share.addEmail(this.parentNode.querySelector('.js-access-email-input').value.trim())">Add</button>
+                    </div>
+                    <div class="js-access-email-holder" style="max-height: 7em;overflow-y: auto;overflow-x: hidden;">
+                        <!--
+                        <div class="access-email">
+                            <div>email@email.com</div>
+                            <div onclick="share.removeEmail()">+</div>
+                        </div>-->
+                    </div>
+                </div>
+                <br />
                 <h4 style="margin-bottom: 0px">File link:</h4>
                 <br />
                 <input class="js-share-input" type="text" name="link" value="" />

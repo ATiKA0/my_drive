@@ -16,6 +16,7 @@ function getIcon($type, $ext = null)
         'application/x-zip-compressed' => '<i class="bi bi-file-zip class_40"></i>',
         'video/x-matroska' => '<i class="bi bi-film class_39"></i>',
         'video/mp4' => '<i class="bi bi-film class_39"></i>',
+        'audio/mpeg' => '<i class="bi bi-soundwave class_39"></i>',
         'folder' => '<i class="bi bi-folder class_39"></i>',
         'application/octet-stream' => [
             'heic' => '<i class="bi bi-filetype-heic class_39"></i>'
@@ -26,7 +27,7 @@ function getIcon($type, $ext = null)
         return $icons['undefined'];
 
     if ($type == 'application/octet-stream') {
-        if (!array_key_exists($ext, $icons[$type]))
+        if (!array_key_exists($ext, $icons))
             return $icons['undefined'];
         else
             return $icons[$type][$ext];
@@ -127,6 +128,6 @@ $formated_file_type = [
     'application/vnd.openxmlformats-officedocument.word' => 'Word document',
     'video/mp4' => 'MP4 Video',
     'video/x-matroska' => 'MKV Video',
-    'audio/mp3' => 'MP3 Audio',
+    'audio/mpeg' => 'MP3 Audio',
     'application/pdf' => 'PDF Document',
 ];
