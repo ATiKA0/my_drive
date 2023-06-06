@@ -120,6 +120,48 @@ function generateSlug()
     return $str;
 }
 
+function check_file_access($row)
+{
+    $user_email = $_SESSION['USER']['email'] ?? 0;
+    $user_id = $_SESSION['USER']['id'] ?? 0;
+    //check file acces
+    switch ($row['share_mode']) {
+        case 0:
+            //private file
+            if ($row['user_id'] == $user_id) {
+                return true;
+            }
+            break;
+        case 1:
+
+            //shared to specific
+            $query = "SELECT * FROM shared_to WHERE file_id = '$row[id]' && disabled = 0";
+            $emails = query($query);
+            if ($emails) {
+                if ($user_id == $row['user_id']) {
+                    return true;
+                } else {
+                    $email_list = array_column($emails, 'email');
+                    if (in_array($user_email, $email_list)) {
+                        return true;
+                    }
+                }
+            } else {
+                //only allow the owner
+                if ($user_id == $row['user_id']) {
+                    return true;
+                }
+            }
+            break;
+        case 2:
+            //shared to public
+            return true;
+        default:
+            return false;
+    }
+    return false;
+}
+
 $formated_file_type = [
     'image/png' => 'Image',
     'image/jpeg' => 'Image',

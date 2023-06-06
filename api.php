@@ -101,16 +101,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
             //save share mode
             $query = "UPDATE mydrive SET share_mode = '$share_mode' WHERE user_id = '$user_id' && id = '$id' LIMIT 1";
             query($query);
-            
+
             //add new access records
             foreach ($emails as $email) {
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) continue;
                 $query = "SELECT * FROM shared_to WHERE email = '$email' && file_id = '$id' LIMIT 1";
                 $row = query_row($query);
 
-                if($row){
-                    $query = "UPDATE shared_to SET disabled = 0 WHERE id = '".$row['id']."' LIMIT 1";
+                if ($row) {
+                    $query = "UPDATE shared_to SET disabled = 0 WHERE id = '" . $row['id'] . "' LIMIT 1";
                     $row = query_row($query);
-                }else{
+                } else {
                     $query = "INSERT INTO shared_to (file_id, email,disabled) VALUES('$id','$email',0)";
                     $row = query_row($query);
                 }
@@ -212,7 +213,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     $rows[$key]['file_size'] = round($row['file_size'] / (1024 * 1024)) . " Mb";
 
                     //get shared to data
-
                     $query = "SELECT * FROM shared_to WHERE file_id = '$row[id]' && disabled = 0";
                     $emails = query($query);
                     $rows[$key]['emails'] = empty($emails) ? "[]" : json_encode($emails);
@@ -256,26 +256,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                 $info['succes'] = true;
 
                 //check file acces
-                switch ($row['share_mode']) {
-                    case 0:
-                        //private file
-                        if ($row['user_id'] !== $user_id) {
-                            $info['row'] = false;
-                            $info['succes'] = false;
-                        }
-                        break;
-                    case 1:
-                        //shared to specific
-
-                        break;
-                    case 2:
-                        //shared to public
-                        break;
-
-                    default:
-                        $info['row'] = false;
-                        $info['succes'] = false;
-                        break;
+                if (!check_file_access($row)) {
+                    $info['row'] = false;
+                    $info['succes'] = false;
                 }
             }
             break;

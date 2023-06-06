@@ -7,29 +7,29 @@ File download
 session_start();
 require 'functions.php';
 
-//check logged in
-if (!isLoggedIn()) {
-    echo "Please log in to download files!";
-    die;
-}
-
 //get the item id and the user id
-$id =       (int)$_GET['id'] ?? null;
-$user_id =  (int)$_SESSION['USER']['id'];
+$id =       $_GET['id'] ?? null;
+$user_id =  $_SESSION['USER']['id'] ?? 0;
+
+$id = (int)$id;
+$user_id = (int)$user_id;
 
 //create and run the query for the file
-$query = "SELECT * FROM mydrive WHERE user_id = '$user_id' && id = '$id' LIMIT 1";
-$row = query($query);
+$query = "SELECT * FROM mydrive WHERE id = '$id' LIMIT 1";
+$row = query_row($query);
 
 //if the file exist read it
 if ($row) {
-    $row = $row[0];
-    $file_path = $row['file_path'];
-    $file_name = $row['file_name'];
+    if (check_file_access($row)) {
+        $file_path = $row['file_path'];
+        $file_name = $row['file_name'];
 
-    header('Content-Disposition: attachment; filename = ' . basename($file_name) . '');
-    readfile($file_path);
-    exit();
+        header('Content-Disposition: attachment; filename = ' . basename($file_name) . '');
+        readfile($file_path);
+        exit();
+    } else {
+        echo "You don't have access to that file!";
+    }
 } else {
     echo "File not found!";
 }

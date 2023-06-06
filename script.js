@@ -70,6 +70,14 @@ const share = {
             document.querySelector(".js-access-email-input").focus();
             return;
         }
+
+        let reg = new RegExp();
+        reg = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        if (!email.match(reg)) {
+            alert("Please type a valid email");
+            document.querySelector(".js-access-email-input").focus();
+            return;
+        }
         let holder = document.querySelector(".js-access-email-holder");
         let div = document.createElement("div");
         div.setAttribute("class", "access-email ");
@@ -547,6 +555,7 @@ const action = {
             action.rootPath + "preview.html?id=" + ROWS[id].slug;
         box.querySelector(".js-share-input").focus();
         box.querySelector(".js-sharemode-" + ROWS[id].share_mode).checked = true;
+        document.querySelector(".js-access-email-input").value = "";
 
         share.refresh(ROWS[id].emails);
     },
