@@ -15,7 +15,7 @@ if (!$info['LOGGED_IN'] && (!in_array($info['data_type'], $works_without_login))
 
 $info['username'] =         $_SESSION['USER']['username'] ?? 'User';
 $info['drive_occupied'] =   getDriveSpace($_SESSION['USER']['id'] ?? 'User');
-$info['drive_total'] =      10;
+$info['drive_total'] =      1;
 $info['breadcrumbs'] =      [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
@@ -33,24 +33,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['data_type'])) {
                     $destination = $folder . time() . rand(0, 9999) . $file['name'];
                 move_uploaded_file($file['tmp_name'], $destination);
 
-                //save to database
-                $type = $file['type'];
-                $dateCreated = date('Y-m-d H:i:s');
-                $dateUpdated = date('Y-m-d H:i:s');
-                $fileName = $file['name'];
-                $filePath = $destination;
-                $user_id = $_SESSION['USER']['id'] ?? 0;
-                $fileSize = $file['size'];
-                $folder_id = $_POST['folder_id'] ?? 0;
-                $slug = generateSlug();
+                //check if there is enough space
+                $occupied = $info['drive_occupied'];
+                $total = $info['drive_total'] * (1024*1024*1024 );
 
-                $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated, folder_id, slug) 
-            values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated', '$folder_id', '$slug')";
-                query($query);
-                $info['succes'] = true;
+                if($occupied+$file['size'] <= $total){
+
+                    //save to database
+                    $type = $file['type'];
+                    $dateCreated = date('Y-m-d H:i:s');
+                    $dateUpdated = date('Y-m-d H:i:s');
+                    $fileName = $file['name'];
+                    $filePath = $destination;
+                    $user_id = $_SESSION['USER']['id'] ?? 0;
+                    $fileSize = $file['size'];
+                    $folder_id = $_POST['folder_id'] ?? 0;
+                    $slug = generateSlug();
+                    
+                    $query = "INSERT INTO mydrive (file_name, file_size, file_path, user_id, file_type, date_created, date_updated, folder_id, slug) 
+                        values ('$fileName', '$fileSize', '$filePath', '$user_id', '$type', '$dateCreated', '$dateUpdated', '$folder_id', '$slug')";
+                    query($query);
+                    $info['succes'] = true;
+                }else{
+                    $info['succes'] = false;
+                    $info['error'] = "You don't have enough space";
+                }
             }
             break;
-
+            
         case ('new_folder'):
 
             //save to database

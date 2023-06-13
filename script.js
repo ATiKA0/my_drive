@@ -2,6 +2,8 @@ let ROWS = [];
 let LOGGED_IN = false;
 let USERNAME = false;
 let FOLDER_ID = 0;
+let DRIVE_OCCUPIED = 0;
+let DRIVE_TOTAL = 0;
 
 let mode = {
     current: "MY DRIVE",
@@ -235,22 +237,22 @@ const table = {
                     }
 
                     //update drive space
+                    DRIVE_OCCUPIED = obj.drive_occupied;
+                    DRIVE_TOTAL = obj.drive_total;
+
+                    let driveOccupied = (DRIVE_OCCUPIED / (1024 * 1024 * 1024)).toFixed(
+                        2
+                    );
+                    let drivePercent = Math.round((driveOccupied / DRIVE_TOTAL) * 100);
+
+                    document.querySelector(
+                        ".js-drive-space-text"
+                    ).innerHTML = `${driveOccupied} GB / ${obj.drive_total} GB`;
+                    document.querySelector(
+                        ".js-drive-space-percent"
+                    ).style.width = `${drivePercent}%`;
+
                     if (obj.succes && obj.data_type == "get_files") {
-                        let driveOccupied = (
-                            obj.drive_occupied /
-                            (1024 * 1024 * 1024)
-                        ).toFixed(2);
-                        let drivePercent = Math.round(
-                            (driveOccupied / obj.drive_total) * 100
-                        );
-
-                        document.querySelector(
-                            ".js-drive-space-text"
-                        ).innerHTML = `${driveOccupied} GB / ${obj.drive_total} GB`;
-                        document.querySelector(
-                            ".js-drive-space-percent"
-                        ).style.width = `${drivePercent}%`;
-
                         ROWS = obj.rows;
                         for (let i = 0; i < obj.rows.length; i++) {
                             let tr = document.createElement("tr");
@@ -427,8 +429,17 @@ const upload = {
         myForm.append("data_type", "upload_files");
         myForm.append("folder_id", FOLDER_ID);
 
+        let fileSize = 0;
+
         for (let i = 0; i < files.length; i++) {
+            fileSize += files[i].size;
             myForm.append("file" + i, files[i]);
+        }
+
+        if (parseInt(DRIVE_OCCUPIED) + parsInt(fileSize) > DRIVE_TOTAL * (1024 * 1024 * 1024)) {
+            alert("You don't have enough space");
+            upload.uploading = false;
+            return;
         }
 
         upload.resetProgress();
@@ -462,6 +473,7 @@ const upload = {
                         table.refresh();
                     } else {
                         alert("Could not complete file upload!");
+                        if (typeof obj.error != "undefined") alert(obj.error);
                     }
                     upload.resetProgress();
                 } else {
@@ -479,7 +491,6 @@ const upload = {
     drop: (e) => {
         e.preventDefault();
         upload.dropZone.removeHighlight();
-        console.log(e.dataTransfer.files);
         upload.send(e.dataTransfer.files);
     },
 

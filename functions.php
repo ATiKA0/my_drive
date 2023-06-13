@@ -133,7 +133,6 @@ function check_file_access($row)
             }
             break;
         case 1:
-
             //shared to specific
             $query = "SELECT * FROM shared_to WHERE file_id = '$row[id]' && disabled = 0";
             $emails = query($query);
